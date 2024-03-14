@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 /* Equation of time calculator */
 /* Copyright (C) 2024 Ellie McNeill */
@@ -18,18 +19,17 @@ int doy;    /* day of year */
 
 int main(int argc){
     float eot;  /* Equation of Time */
+    time_t posix;
 
     if(argc > 1)    /* ANY argument enters graph mode */
         graph();
 
-    printf("Day of year? ");
-    scanf("%d", &doy);
-    if(doy > 366)
-        return 1; /* invalid day */
-
+    time(&posix);   /* Get POSIX time */
+    doy = gmtime(&posix)->tm_yday; /* Get day of year */
+    doy++;  /* Jan 1st is day 1 */
     eot = equation_of_time(doy);
 
-    printf("EOT is %f\n", eot);
+    /* printf("EOT is %f\n", eot); */
     printf("EOT is %dm %.1fs\n", (int)eot, 60*(eot - (int)eot));
     return 0;
 }
