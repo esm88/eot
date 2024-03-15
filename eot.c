@@ -19,6 +19,7 @@ int doy;    /* day of year */
 
 int main(int argc){
     float eot;  /* Equation of Time */
+    float secs;
     time_t posix;
 
     if(argc > 1)    /* ANY argument enters graph mode */
@@ -29,8 +30,10 @@ int main(int argc){
     doy++;  /* Jan 1st is day 1 */
     eot = equation_of_time(doy);
 
-    /* printf("EOT is %f\n", eot); */
-    printf("EOT is %dm %.1fs\n", (int)eot, 60*(eot - (int)eot));
+    secs = 60*(eot - (int)eot);
+    if(secs < 0)
+        secs = -secs;
+    printf("EOT is %dm %.0fs\n", (int)eot, round(secs));
     return 0;
 }
 
