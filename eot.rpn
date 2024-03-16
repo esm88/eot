@@ -1,0 +1,34 @@
+FIX 2
+ENT
+ENT
+9 +
+360 ENT
+365.24 /
+STO 4
+*
+x<>y
+3 -
+RCL 4
+*
+SIN
+360 ENT
+PI / *
+.0167 * +
+TAN
+23.44 COS
+/
+ATAN
+-
+180 /
+ENT
+ENT
+.5 +
+INT
+-
+720 *
+ENT
+FRAC
+.6 *
+x<>y
+INT
++
