@@ -24,9 +24,9 @@ Values converted to radians to work with C trig functions
 
 This will generate a csv file and run an Octave script
 
-**HP-15C version**
+**HP-42S version**
 
-I have also written an RPN version for the HP-15C calculator (`eot.rpn`).
-Enter the day number and and run program A. The result is displayed in
-minutes and seconds, separated by a decimal point. Make sure you are in
-degrees mode.
+I have also written an RPN version for the HP-42S calculator (`eot.42s`).
+Enter the day number and run EOT. The result is displayed in register X in minutes and seconds, separated by a decimal point. Make sure you are in degrees mode.
+
+There is also an HP-15C version (`eot.15c`).
