@@ -1,5 +1,5 @@
-00 { 93-Byte Prgm }
-01 LBL "EOT"
+00 { 84-Byte Prgm }
+01▸LBL "EOT"
 02 FIX 02
 03 ENTER
 04 ENTER
@@ -41,11 +41,5 @@
 40 -
 41 720
 42 ×
-43 ENTER
-44 FP
-45 0.6
-46 ×
-47 X<>Y
-48 IP
-49 +
-50 .END.
+43 →HMS
+44 .END.

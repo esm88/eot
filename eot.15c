@@ -26,9 +26,4 @@ ENT
 INT
 -
 720 *
-ENT
-FRAC
-.6 *
-x<>y
-INT
-+
+->H.MS
