@@ -15,9 +15,6 @@ Values converted to radians to work with C trig functions
 
 `./eot`
 
-...and enter the day of year (between 1 and 366)
-
-
 **To get a fancy graph (GNU octave required):**
 
 `./graph.sh`
