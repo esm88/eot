@@ -1,0 +1,21 @@
+.TH EOT 1 "March 2024"
+.SH NAME
+eot - display the equation of time
+.SH SYNOPSIS
+.B eot
+[OPTION]
+.SH DESCRIPTION
+Display the Equation of Time for the current date.
+
+The Equation of Time is the difference between LMT (Local Mean Time) and AST (Apparent Solar Time) as shown by a sundial.
+
+Negative values indicate AST is behind LMT. Positive values indicate AST is ahead of LMT.
+
+Note that LMT is not the same as 'standard' time and will differ depending on your longitude and whether DST is in effect.
+.SH OPTIONS
+.I ANY
+argument will enter 'graph' mode. This causes the program to output all values for the entire year in decimal form. This can then be fed into a graphing program such as GNU Octave.
+.SH SEE ALSO
+.B lmt(1)
+.SH COPYRIGHT
+Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3 (see LICENSE).
