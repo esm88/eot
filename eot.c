@@ -1,34 +1,36 @@
+/*************************************************************************/
+/* Equation of time calculator                                           */
+/* Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3                */
+/* Gives the difference between Local Mean Time and Apparent Solar Time  */
+/* Equations sourced from The Astronomical Almanac:                      */
+/* https://en.wikipedia.org/wiki/Astronomical_Almanac                    */
+/*************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
 
-/* Equation of time calculator */
-/* Copyright (C) 2024 Ellie McNeill */
-/* Gives the difference between Mean Time and Apparent Solar Time */
-/* https://en.wikipedia.org/wiki/Equation_of_time#Alternative_calculation */
-/* Values converted to radians to work with C trig functions! */
+#define Y2K 946684800       /* POSIX time at 2000-01-01 00:00 */
+#define DPR (180.0 / M_PI)  /* Degrees per radian */
 
-#define ORB_ECC 0.01671 /* Earth's orbital eccentricity */
-#define AX_TILT 0.4091  /* Earth's axial tilt in RADIANS */
-
-const float rpd = (2 * M_PI) / 365.24; /* Earth orbit (radians/day) */
 float equation_of_time(int);
+double mod(double, double); /* Floating-point modulo function */
 void graph(void);
-int doy;    /* day of year */
 
 int main(int argc){
+
+    int days;   /* Days since 2000-01-01 00:00 */
     float eot;  /* Equation of Time */
     float secs;
-    time_t posix;
+    time_t current;
 
     if(argc > 1)    /* ANY argument enters graph mode */
         graph();
 
-    time(&posix);   /* Get POSIX time */
-    doy = gmtime(&posix)->tm_yday; /* Get day of year */
-    doy++;  /* Jan 1st is day 1 */
-    eot = equation_of_time(doy);
+    time(&current);                 /* Get current POSIX time */
+    days = (current - Y2K) / 86400; /* 86400 secs in a day */
+    eot = equation_of_time(days);
 
     secs = 60*(eot - (int)eot);
     if(secs < 0)
@@ -37,17 +39,57 @@ int main(int argc){
     return 0;
 }
 
-float equation_of_time(int doy){
-    float a, b, c; /* temp values, taken straight from Wiki example */
-    a = (doy + 9) * rpd;    /* Start point is Dec. solstice */
-    b = a + (ORB_ECC * 2 * sin ((doy - 3) * rpd));  /* Orbit */
-    c = (a - (atan((tan(b))/cos(AX_TILT)))) / M_PI; /* Tilt */
-    return 720 * (c - (int)(c + 0.5));  /* 720 mins = 12 hours */
+
+float equation_of_time(int n){
+
+/*******************************************/
+/* Source: Astronomical Almanac, Section C */
+/* "Low precision formulas for the Sun"    */
+/* "yields a precision better than 3.5s    */
+/*  between the years 1950 and 2050."      */
+/*******************************************/
+
+    double L;       /* Mean longitude of sun, corrected for aberration */
+    double g;       /* Mean anomaly */
+    double lambda;  /* Ecliptic longitude */
+    double epsilon; /* Obliquity of ecliptic */
+    double alpha;   /* Right ascension */
+
+    L = 280.460 + 0.9856474 * n;
+    L = mod(L, 360);    /* Put L in range 0 - 360 */
+    L = L / DPR;        /* Convert L to radians */
+
+    g = 357.528 + 0.9856003 * n;
+    g = mod(g, 360);    /* Put g in range 0 - 360 */
+    g = g / DPR;        /* Convert g to radians */
+
+    lambda = L + ((1.915 / DPR) * sin(g)) + ((0.020 / DPR) * sin(2 * g));
+
+    L = L * DPR;    /* Convert L back to degrees */
+
+    epsilon = (23.439 / DPR) - (0.0000004 / DPR) * n;
+
+    alpha = atan(cos(epsilon) * tan(lambda));
+    lambda = (lambda * DPR);    /* Convert lambda to degrees */
+    alpha = (alpha * DPR);      /* Convert alpha to degrees */
+
+    if(lambda > 90)             /* Get alpha into the same */
+        alpha = alpha + 180;    /* quadrant as lambda */
+    if(lambda > 270)
+        alpha = alpha + 180;
+
+    return (L - alpha) * 4;
 }
 
-void graph(){   /* Generate a list for the whole year */
-    for(doy=0;doy<366;doy++)
-        printf("%.2f,", equation_of_time(doy));
+void graph(){   /* Generate a list for the entire year 2000 */
+    int i;
+    for(i=0;i<366;i++)
+        printf("%.2f,", equation_of_time(i));
     printf("\n");
     exit(0);
+}
+
+double mod(double x, double y){
+    x = (x / y);
+    return (x - (int)x) * y;
 }

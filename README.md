@@ -1,11 +1,13 @@
 Equation of time calculator
 ---------------------------
 
-Gives the difference between Mean Time and Apparent Solar Time.
+Gives the difference between Local Mean Time and Apparent Solar Time.
 
-https://en.wikipedia.org/wiki/Equation_of_time#Alternative_calculation
+Equations sourced from The Astronomical Almanac:
 
-Values converted to radians to work with C trig functions
+https://en.wikipedia.org/wiki/Astronomical_Almanac
+
+"Yields a precision better than 3.5s between the years 1950 and 2050."
 
 **To compile:**
 
