@@ -11,11 +11,15 @@ https://en.wikipedia.org/wiki/Astronomical_Almanac
 
 **To compile:**
 
-`gcc eot.c -o eot -lm`
+`$ make`
+
+**To install:**
+
+`# make install`
 
 **To run:**
 
-`./eot`
+`$ eot`
 
 **To get a fancy graph (GNU octave required):**
 
