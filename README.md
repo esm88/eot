@@ -27,9 +27,10 @@ https://en.wikipedia.org/wiki/Astronomical_Almanac
 
 This will generate a csv file and run an Octave script
 
-**HP-42S version**
+**Free42 version**
 
-I have also written an RPN version for the HP-42S calculator (`eot.42s`).
-Enter the day number and run EOT. The result is displayed in register X in minutes and seconds, separated by a decimal point. Make sure you are in degrees mode.
+I have also written an RPN version for the Free42 calculator (`eot.42s`). Execute EOT. The result is displayed in register X in minutes and seconds, separated by a decimal point. Make sure you are in degrees mode.
 
-There is also an HP-15C version (`eot.15c`).
+Note: This version will not work with the original HP-42S as it requires the TIME functions. It will however work on a DM42.
+
+There is also an HP-15C version (`eot.15c`). This uses a simpler algorithm. Enter the day number (of year) and run LBL A. It is not as accurate as the C and Free42 versions.
