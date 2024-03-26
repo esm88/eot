@@ -5,7 +5,7 @@ eot - display the equation of time
 .B eot
 [OPTION]
 .SH DESCRIPTION
-Display the Equation of Time for the current date. Values given are for noon GMT.
+Display the Equation of Time for the current date. Values given are for noon of the current GMT date.
 
 The Equation of Time is the difference between LMT (Local Mean Time) and AST (Apparent Solar Time) as shown by a sundial.
 
@@ -13,8 +13,12 @@ Negative values indicate AST is behind LMT. Positive values indicate AST is ahea
 
 Note that LMT is not the same as 'standard' time and will differ depending on your longitude and whether DST is in effect.
 .SH OPTIONS
-.I ANY
-argument will enter 'graph' mode. This causes the program to output all values for the entire year in decimal form. This can then be fed into a graphing program such as GNU Octave.
+.TP
+.B -g
+enter 'graph' mode. This causes the program to output all values for the entire year 2000 in decimal form. This can then be fed into a graphing program such as GNU Octave.
+.TP
+.B -e
+give the Equation of Time for this \fBexact\fR instant (instead of noon of the current GMT date).
 .SH SEE ALSO
 .B lmt(1)
 .SH COPYRIGHT

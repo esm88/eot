@@ -7,29 +7,45 @@
 /*************************************************************************/
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 #define Y2K 946684800       /* POSIX time at 2000-01-01 00:00 */
 #define DPR (180.0 / M_PI)  /* Degrees per radian */
 
-float equation_of_time(int);
+float equation_of_time(float);
 double mod(double, double); /* Floating-point modulo function */
 void graph(void);
 
-int main(int argc){
+int main(int argc, char *argv[]){
 
-    int days;   /* Days since 2000-01-01 00:00 */
+    float days; /* Days since 2000-01-01 00:00 */
     float eot;  /* Equation of Time */
     float secs;
     time_t current;
+    int exact = 0;
 
-    if(argc > 1)    /* ANY argument enters graph mode */
+    if(argc > 1)
+    if(!strcmp(argv[1],"-g")) {
         graph();
+        return 0;
+    } else if(!strcmp(argv[1],"-e")) {
+        exact = 1;
+    } else {
+        printf("%s: invalid option\n", argv[1]);
+        return 1;
+    }
 
     time(&current);                 /* Get current POSIX time */
-    days = (current - Y2K) / 86400; /* 86400 secs in a day */
+    days = (current - Y2K) / 86400.0 ; /* 86400 secs in a day */
+    if(exact)
+        days = days -0.5;   /* Julian days begin at NOON */
+    else
+        days = (int) days;
+
+    printf("Days: %f\n", days);
+
     eot = equation_of_time(days);
 
     secs = 60*(eot - (int)eot);
@@ -40,7 +56,7 @@ int main(int argc){
 }
 
 
-float equation_of_time(int n){
+float equation_of_time(float n){
 
 /*******************************************/
 /* Source: Astronomical Almanac, Section C */
@@ -86,7 +102,6 @@ void graph(){   /* Generate a list for the entire year 2000 */
     for(i=0;i<366;i++)
         printf("%.2f,", equation_of_time(i));
     printf("\n");
-    exit(0);
 }
 
 double mod(double x, double y){
