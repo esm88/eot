@@ -1,7 +1,7 @@
 PREFIX=/usr/local
 
 all:
-	gcc eot.c -o eot -lm
+	cc eot.c sun.c -o eot -lm
 
 install:
 	cp eot ${PREFIX}/bin/
