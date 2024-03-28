@@ -7,7 +7,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#define DPR (180.0 / 3.14159)    /* Degrees per radian */
+#define DPR (180.0 / 3.14159265)    /* Degrees per radian */
 
 double mod(double x, double y){     /* Floating-point modulo function */
     x = (x / y);
@@ -46,6 +46,10 @@ float equation_of_time(float n){
 
     epsilon = (23.439 / DPR) - (0.0000004 / DPR) * n;
 
+    #ifdef DEBUG
+    delta = (asin(sin(epsilon) * sin(lambda))) * DPR;
+    #endif
+
     alpha = atan(cos(epsilon) * tan(lambda));
     lambda = (lambda * DPR);    /* Convert lambda to degrees */
     alpha = (alpha * DPR);      /* Convert alpha to degrees */
@@ -54,6 +58,15 @@ float equation_of_time(float n){
         alpha = alpha + 180;    /* quadrant as lambda */
     if(lambda > 270)
         alpha = alpha + 180;
+
+    #ifdef DEBUG
+    printf("R.A.= %dh %.0fm\n", (int)(alpha / 15), (((alpha / 15) - 
+        (int)(alpha/15)) * 60));
+    printf("Dec.= %ddeg %.fm\n", (int)delta, (delta - (int)delta) * 60);
+    printf("Long= %ddeg %.fm\n", (int)lambda, (lambda - (int)lambda) * 60);
+    printf("Dist= %.4f AU\n", 1.00014 - (0.01671 * (cos(g))) - (0.00014 *
+        cos(2 * g)));
+    #endif
 
     return (L - alpha) * 4;
 }

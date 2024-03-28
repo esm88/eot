@@ -42,6 +42,7 @@ int main(int argc, char *argv[]){
     else
         days = (int) days;
 
+    /* scanf("%f", &days); */
     #ifdef DEBUG
     printf("Days= %.3f\n", days);
     #endif
