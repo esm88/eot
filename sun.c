@@ -46,7 +46,7 @@ float equation_of_time(float n){
 
     epsilon = (23.439 / DPR) - (0.0000004 / DPR) * n;
 
-    #ifdef DEBUG
+    #ifdef ASTRO
     delta = (asin(sin(epsilon) * sin(lambda))) * DPR;
     #endif
 
@@ -59,7 +59,7 @@ float equation_of_time(float n){
     if(lambda > 270)
         alpha = alpha + 180;
 
-    #ifdef DEBUG
+    #ifdef ASTRO
     printf("R.A.= %dh %.0fm\n", (int)(alpha / 15), (((alpha / 15) - 
         (int)(alpha/15)) * 60));
     printf("Dec.= %ddeg %.fm\n", (int)delta, (delta - (int)delta) * 60);

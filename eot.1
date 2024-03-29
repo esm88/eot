@@ -3,9 +3,11 @@
 eot - display the equation of time
 .SH SYNOPSIS
 .B eot
-[OPTION]
+[OPTION]... [DATE]...
 .SH DESCRIPTION
-Display the Equation of Time for the current date. Values given are for noon of the current GMT date.
+Display the Equation of Time for DATE, where DATE is the number of days since the J2000.0 epoch. Negative and fractional values are accepted.
+
+If no DATE is supplied, the current GMT date is used. Values given are for noon of the current GMT date.
 
 The Equation of Time is the difference between LMT (Local Mean Time) and AST (Apparent Solar Time) as shown by a sundial.
 
@@ -19,6 +21,9 @@ enter 'graph' mode. This causes the program to output all values for the entire 
 .TP
 .B -e
 give the Equation of Time for this \fBexact\fR instant (instead of noon of the current GMT date).
+.TP
+.B -j
+display the Julian date (JD)
 .SH SEE ALSO
 .B lmt(1)
 .SH COPYRIGHT

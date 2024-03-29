@@ -3,8 +3,8 @@ PREFIX=/usr/local
 all:
 	cc eot.c sun.c -o eot -lm
 
-debug:
-	cc eot.c sun.c -o eot -lm -DDEBUG
+astro:
+	cc eot.c sun.c -o eot -lm -DASTRO
 
 install:
 	cp eot ${PREFIX}/bin/
