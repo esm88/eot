@@ -12,20 +12,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "sun.h"
 
-#define Y2K 946684800       /* POSIX time at 2000-01-01 00:00 */
-#define DATE 1
-#define EXACT 2
-#define JULIAN 4
-
-float equation_of_time(float);
+struct sun sun_calc(float);
 void graph(void);
+float conv(float);
 
 int main(int argc, char *argv[]){
 
     float days; /* Days since 2000-01-01 00:00 */
-    float eot;  /* Equation of Time */
-    float secs;
+    struct sun s;   /* Store parameters of the sun */
     time_t current;
     short flags = 0;    /* Flags for -j, -e, DATE input */
 
@@ -40,6 +36,9 @@ int main(int argc, char *argv[]){
                 break;
             case 'j':
                 flags = flags ^ JULIAN;
+                break;
+            case 'a':
+                flags = flags ^ ALL;
                 break;
             default:
                 printf("-%c: invalid option\n", argv[argc][1]);
@@ -73,18 +72,36 @@ int main(int argc, char *argv[]){
     if(flags & JULIAN)
         printf("JD: %.3f\n", days + 2451545.0);
 
-    eot = equation_of_time(days);
+    s = sun_calc(days);
 
-    secs = 60*(eot - (int)eot);
-    if(secs < 0)
-        secs = -secs;
-    printf("EOT is %dm %.0fs\n", (int)eot, secs);
+    if(!s.dist) {   /* Distance should never be 0, so an error occurred */
+        printf("Please enter a date between the years 1950 and 2049\n");
+        return 1;
+    }
+
+    if(flags & ALL) {
+        if(s.ra >= 360) {
+            s.ra = s.ra - 360;
+            s.lon = s.lon - 360;
+        }
+        s.ra = s.ra / 15;   /* 15 degrees = 1 hour */
+        printf("R.A.= %dh %.0fm\n", (int)s.ra, conv(s.ra));
+        printf("Dec.= %ddeg %.fm\n", (int)s.dec, fabs(conv(s.dec)));
+        printf("Long= %ddeg %.fm\n", (int)s.lon, conv(s.lon));
+        printf("Dist= %.4f AU\n", s.dist);
+    }
+
+    printf("EOT is %dm %.0fs\n", (int)s.eot, fabs(conv(s.eot)));
     return 0;
 }
 
 void graph(){   /* Generate a list for the entire year 2000 */
     short i;
     for(i=0;i<366;i++)
-        printf("%.2f,", equation_of_time(i));
+        printf("%.2f,", sun_calc(i).eot);
     printf("\n");
+}
+
+float conv(float num){  /* Convert fractional part to minutes or seconds */
+    return ((num - (int)num) * 60);
 }

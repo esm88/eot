@@ -11,15 +11,7 @@ https://en.wikipedia.org/wiki/Astronomical_Almanac
 
 **To compile:**
 
-For the basic version:
-
 `$ make`
-
-If you want an enhanced 'astronomy' version which gives you various parameters of the sun (Right ascension, declination, ecliptic longitude, distance):
-
-`$ make astro`
-
-Note: This version currently breaks the 'graph' mode.
 
 **To install:**
 
@@ -28,6 +20,10 @@ Note: This version currently breaks the 'graph' mode.
 **To run:**
 
 `$ eot`
+
+To get *all* parameters of the sun (right ascension, declination, ecliptic longitude, distance):
+
+`$eot -a`
 
 **To get a fancy graph (GNU octave required):**
 

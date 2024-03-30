@@ -1,36 +1,33 @@
-/************************************/
-/* Equation of time calculator      */
-/* Copyright (C) 2024 Ellie McNeill */
-/* Licensed under GPLv3             */
-/************************************/
+/************************************************************/
+/* Solar calculator                                         */
+/* Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3   */
+/* Equations are from The Astronomical Almanac, Section C   */
+/* "Low precision formulas for the Sun"                     */
+/* Accuracy (1950-2050): R.A./Dec: 1.0'; EOT: 3.5s          */
+/************************************************************/
 
+#include "sun.h"
 #include <math.h>
-#include <stdio.h>
-
-#define DPR (180.0 / 3.14159265)    /* Degrees per radian */
+#include <stdlib.h>
 
 double mod(double x, double y){     /* Floating-point modulo function */
     x = (x / y);
     return (x - (int)x) * y;
 }
 
-float equation_of_time(float n){
-
-/*******************************************/
-/* Source: Astronomical Almanac, Section C */
-/* "Low precision formulas for the Sun"    */
-/* "yields a precision better than 3.5s    */
-/*  between the years 1950 and 2050."      */
-/* INPUT: Days since J2000.0 epoch         */
-/* OUTPUT: Equation of Time (minutes)      */
-/*******************************************/
+struct sun sun_calc(float n){       /* n = days since J2000.0 epoch */
 
     double L;       /* Mean longitude of sun, corrected for aberration */
     double g;       /* Mean anomaly */
     double lambda;  /* Ecliptic longitude */
     double epsilon; /* Obliquity of ecliptic */
     double alpha;   /* Right ascension */
-    float delta;    /* Declination */
+    struct sun sol; /* Structure to return */
+
+    if(n > abs(MAX_DAY)) {
+        sol.dist = 0;   /* indicates error condition */
+        return sol;
+    }
 
     L = 280.460 + 0.9856474 * n;
     L = mod(L, 360);    /* Put L in range 0 - 360 */
@@ -46,9 +43,7 @@ float equation_of_time(float n){
 
     epsilon = (23.439 / DPR) - (0.0000004 / DPR) * n;
 
-    #ifdef ASTRO
-    delta = (asin(sin(epsilon) * sin(lambda))) * DPR;
-    #endif
+    sol.dec = (asin(sin(epsilon) * sin(lambda))) * DPR; /* Declination */
 
     alpha = atan(cos(epsilon) * tan(lambda));
     lambda = (lambda * DPR);    /* Convert lambda to degrees */
@@ -59,14 +54,10 @@ float equation_of_time(float n){
     if(lambda > 270)
         alpha = alpha + 180;
 
-    #ifdef ASTRO
-    printf("R.A.= %dh %.0fm\n", (int)(alpha / 15), (((alpha / 15) - 
-        (int)(alpha/15)) * 60));
-    printf("Dec.= %ddeg %.fm\n", (int)delta, (delta - (int)delta) * 60);
-    printf("Long= %ddeg %.fm\n", (int)lambda, (lambda - (int)lambda) * 60);
-    printf("Dist= %.4f AU\n", 1.00014 - (0.01671 * (cos(g))) - (0.00014 *
-        cos(2 * g)));
-    #endif
+    sol.ra = alpha;
+    sol.lon = lambda;
+    sol.dist = 1.00014 - (0.01671 * (cos(g))) - (0.00014 * cos(2 * g));
+    sol.eot = (L - alpha) * 4;
 
-    return (L - alpha) * 4;
+    return sol;
 }
