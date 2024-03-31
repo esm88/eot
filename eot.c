@@ -23,6 +23,7 @@ int main(int argc, char *argv[]){
     float days; /* Days since 2000-01-01 00:00 */
     struct sun s;   /* Store parameters of the sun */
     time_t current;
+    struct ymd date;
     short flags = 0;    /* Flags for -j, -e, DATE input */
 
     while(--argc) {     /* Only run if there are still arguments */
@@ -56,7 +57,9 @@ int main(int argc, char *argv[]){
                 printf("Please provide only ONE date\n");
                 return 1;
             }
-            days = atof(argv[argc]);    /* ASSUME it's a number */
+            sscanf(argv[argc], "%d-%d-%d", &date.y, &date.m, &date.d);
+            /* Hope that the user supplies a valid date */
+            days = ddays(&date);
             flags = flags | DATE;
         }
     }
@@ -76,6 +79,12 @@ int main(int argc, char *argv[]){
         else
             days = (int) days;
     }
+
+    if((flags & DATE) && (flags & MIDNIGHT))
+        days = days - 0.5;
+
+    if(flags & DATE)
+        printf("Date: %d-%d-%d\n", date.y, date.m, date.d);
 
     if((flags & DATE) || (flags & DAY))
         printf("Day: J2000.0 %+.3f\n", days);

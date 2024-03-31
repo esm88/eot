@@ -5,7 +5,7 @@ eot - display the equation of time
 .B eot
 [\fIOPTION\fR]... [\fIDATE\fR]
 .SH DESCRIPTION
-Display the Equation of Time for DATE, where DATE is the number of days since the J2000.0 epoch. Negative and fractional values are accepted.
+Display the Equation of Time for DATE, where DATE is an ISO 8601 date of the form YYYY-[M]M-[D]D.
 
 If no DATE is supplied, the current GMT date is used. Values given are for noon of the current GMT date.
 
@@ -34,7 +34,7 @@ use midnight (00:00) instead of noon (12:00)
 
 .TP
 .B -n
-give the Equation of Time for \fBnow\fR (instead of noon of the current GMT date).
+give the Equation of Time for \fBnow\fR (instead of noon of the current GMT date). This option has no effect when the user supplies their own DATE.
 
 .TP
 .B -v
@@ -45,8 +45,6 @@ verbose mode. Display the sun's right ascension, declination, ecliptic longitude
 display ecliptic longitude in 'zodiacal' format. Used by astrologers. This uses the tropical zodiac and does not mean that the sun is actually in that particular constellation!
 
 .SH NOTES
-The -m and -n options are ignored when the user supplies their own date
-
 The star sign shown with -z may be \fBwrong\fR when very close to the 'cusp'
 .SH SEE ALSO
 \fBlmt\fR(1), \fBdays\fR(1)

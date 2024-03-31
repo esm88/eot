@@ -17,6 +17,8 @@
 #define MAX_DAY 18262               /* Max days from J2000.0 */
 
 struct sun { float ra, dec, lon, dist, eot; };
+struct ymd { int y, m, d; };
 
-double mod(double, double);
+double mod(double, double);     /* Floating point modulo function */
+int ddays(struct ymd *date);    /* Calculates days from 2000-01-01 */
 struct sun sun_calc(const float);

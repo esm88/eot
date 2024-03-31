@@ -17,7 +17,7 @@ struct sun sun_calc(const float n){ /* n = days since J2000.0 epoch */
     double alpha;   /* Right ascension */
     struct sun sol; /* Structure to return */
 
-    if(n > abs(MAX_DAY)) {
+    if(fabs(n) > (MAX_DAY)) {
         sol.dist = 0;   /* indicates error condition */
         return sol;
     }
