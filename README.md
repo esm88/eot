@@ -21,9 +21,9 @@ https://en.wikipedia.org/wiki/Astronomical_Almanac
 
 `$ eot`
 
-To get *all* parameters of the sun (right ascension, declination, ecliptic longitude, distance):
+To get more parameters of the sun (right ascension, declination, ecliptic longitude, distance):
 
-`$eot -a`
+`$eot -v`
 
 **To get a fancy graph (GNU octave required):**
 

@@ -3,7 +3,7 @@
 eot - display the equation of time
 .SH SYNOPSIS
 .B eot
-[OPTION]... [DATE]...
+[\fIOPTION\fR]... [\fIDATE\fR]
 .SH DESCRIPTION
 Display the Equation of Time for DATE, where DATE is the number of days since the J2000.0 epoch. Negative and fractional values are accepted.
 
@@ -16,17 +16,39 @@ Negative values indicate AST is behind LMT. Positive values indicate AST is ahea
 Note that LMT is not the same as 'standard' time and will differ depending on your longitude and whether DST is in effect.
 .SH OPTIONS
 .TP
+.B -a
+enable \fBall\fR display options (-v, -j, -z)
+
+.TP
 .B -g
 enter 'graph' mode. This causes the program to output all values for the entire year 2000 in decimal form. This can then be fed into a graphing program such as GNU Octave.
-.TP
-.B -e
-give the Equation of Time for this \fBexact\fR instant (instead of noon of the current GMT date).
+
+
 .TP
 .B -j
 display the Julian date (JD)
-.B -a
-display \fBall\fR parameters of the sun
+
+.TP
+.B -m
+use midnight (00:00) instead of noon (12:00)
+
+.TP
+.B -n
+give the Equation of Time for \fBnow\fR (instead of noon of the current GMT date).
+
+.TP
+.B -v
+verbose mode. Display the sun's right ascension, declination, ecliptic longitude, and distance
+
+.TP
+.B -z
+display ecliptic longitude in 'zodiacal' format. Used by astrologers. This uses the tropical zodiac and does not mean that the sun is actually in that particular constellation!
+
+.SH NOTES
+The -m and -n options are ignored when the user supplies their own date
+
+The star sign shown with -z may be \fBwrong\fR when very close to the 'cusp'
 .SH SEE ALSO
-.B lmt(1)
+\fBlmt\fR(1), \fBdays\fR(1)
 .SH COPYRIGHT
 Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3 (see LICENSE).

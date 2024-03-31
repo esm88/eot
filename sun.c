@@ -7,15 +7,8 @@
 /************************************************************/
 
 #include "sun.h"
-#include <math.h>
-#include <stdlib.h>
 
-double mod(double x, double y){     /* Floating-point modulo function */
-    x = (x / y);
-    return (x - (int)x) * y;
-}
-
-struct sun sun_calc(float n){       /* n = days since J2000.0 epoch */
+struct sun sun_calc(const float n){ /* n = days since J2000.0 epoch */
 
     double L;       /* Mean longitude of sun, corrected for aberration */
     double g;       /* Mean anomaly */
@@ -60,4 +53,9 @@ struct sun sun_calc(float n){       /* n = days since J2000.0 epoch */
     sol.eot = (L - alpha) * 4;
 
     return sol;
+}
+
+double mod(double x, double y){ /* Floating-point modulo function */
+    x = (x / y);
+    return (x - (int)x) * y;
 }
