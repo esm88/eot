@@ -2,14 +2,14 @@
 #include <time.h>
 #include "sun.h"
 
-int ddays(struct ymd *date){
+int ddays(const struct ymd *date){
     time_t posix;
     struct tm intime;
 
     intime.tm_year = date->y - 1900;
     intime.tm_mon = date->m - 1;
     intime.tm_mday = date->d;
-    intime.tm_hour = 12;
+    intime.tm_hour = 0;
     intime.tm_min = 0;
     intime.tm_sec = 0;
 

@@ -6,20 +6,21 @@
 /* Accuracy (1950-2050): R.A./Dec: 1.0'; EOT: 3.5s          */
 /************************************************************/
 
+#include <stdio.h>
 #include "sun.h"
+struct sun sol; /* Stores sun parameters */
 
-struct sun sun_calc(const float n){ /* n = days since J2000.0 epoch */
+struct sun *sun_calc(const float n){ /* n = days since J2000.0 epoch */
 
     double L;       /* Mean longitude of sun, corrected for aberration */
     double g;       /* Mean anomaly */
     double lambda;  /* Ecliptic longitude */
     double epsilon; /* Obliquity of ecliptic */
     double alpha;   /* Right ascension */
-    struct sun sol; /* Structure to return */
 
     if(fabs(n) > (MAX_DAY)) {
         sol.dist = 0;   /* indicates error condition */
-        return sol;
+        return &sol;
     }
 
     L = 280.460 + 0.9856474 * n;
@@ -42,6 +43,11 @@ struct sun sun_calc(const float n){ /* n = days since J2000.0 epoch */
     lambda = (lambda * DPR);    /* Convert lambda to degrees */
     alpha = (alpha * DPR);      /* Convert alpha to degrees */
 
+    if(lambda < -90)            /* Get alpha into the same */
+        alpha = alpha - 180;    /* quadrant as lambda */
+    if(lambda < -270)
+        alpha = alpha - 180;
+
     if(lambda > 90)             /* Get alpha into the same */
         alpha = alpha + 180;    /* quadrant as lambda */
     if(lambda > 270)
@@ -51,8 +57,7 @@ struct sun sun_calc(const float n){ /* n = days since J2000.0 epoch */
     sol.lon = lambda;
     sol.dist = 1.00014 - (0.01671 * (cos(g))) - (0.00014 * cos(2 * g));
     sol.eot = (L - alpha) * 4;
-
-    return sol;
+    return &sol;
 }
 
 double mod(double x, double y){ /* Floating-point modulo function */

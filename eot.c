@@ -12,16 +12,13 @@
 #include <ctype.h>
 #include "sun.h"
 
-void graph();
-float conv(const float); /* Convert fractional part to mins or secs */
-
 const char *signs[] = { "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
     "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces" };
 
 int main(int argc, char *argv[]){
 
-    float days; /* Days since 2000-01-01 00:00 */
-    struct sun s;   /* Store parameters of the sun */
+    float days;     /* Days since 2000-01-01 00:00 */
+    struct sun *s;  /* Pointer to the sun paramaters from sun.c */
     time_t current;
     struct ymd date;
     short flags = 0;    /* Flags for -j, -e, DATE input */
@@ -58,7 +55,7 @@ int main(int argc, char *argv[]){
                 return 1;
             }
             sscanf(argv[argc], "%d-%d-%d", &date.y, &date.m, &date.d);
-            /* Hope that the user supplies a valid date */
+            /* HOPE that the user supplies a valid date! */
             days = ddays(&date);
             flags = flags | DATE;
         }
@@ -94,38 +91,44 @@ int main(int argc, char *argv[]){
 
     s = sun_calc(days);
 
-    if(!s.dist) {   /* Distance should never be 0, so an error occurred */
+    if(!s->dist) {   /* Distance should never be 0, so an error occurred */
         printf("Please enter a date between the years 1950 and 2049\n");
         return 1;
     }
 
-    if(s.ra >= 360) {
-        s.ra = s.ra - 360;
-        s.lon = s.lon - 360;
+    if(s->ra >= 360) {
+        s->ra = s->ra - 360;
+        s->lon = s->lon - 360;
     }
 
+    s->ra = s->ra / 15;   /* 15 degrees = 1 hour */
+    if(s->ra < 0)
+        s->ra += 24;    /* Fix negative R.A. values */
+
+    if(s->lon < 0)
+        s->lon += 360;  /* Fix negative longitude values */
+
     if(flags & VERBOSE) {
-        s.ra = s.ra / 15;   /* 15 degrees = 1 hour */
-        printf("R.A.= %dh %.0fm\n", (int)s.ra, conv(s.ra));
-        printf("Dec.= %+ddeg %.fm\n", (int)s.dec, fabs(conv(s.dec)));
-        printf("Long= %ddeg %.fm\n", (int)s.lon, conv(s.lon));
-        printf("Dist= %.4f AU\n", s.dist);
+        printf("R.A.= %dh %.0fm\n", (int)s->ra, conv(s->ra));
+        printf("Dec.= %+ddeg %.fm\n", (int)s->dec, fabs(conv(s->dec)));
+        printf("Long= %ddeg %.fm\n", (int)s->lon, conv(s->lon));
+        printf("Dist= %.4f AU\n", s->dist);
     }
 
     if(flags & ZODIAC) {
-        printf("%s ", signs[(int)(s.lon/30)]);
-        s.lon = mod(s.lon,30);
-        printf("%ddeg %.0fm\n", (int)s.lon, conv(s.lon));
+        printf("%s ", signs[(int)(s->lon/30)]);
+        s->lon = mod(s->lon,30);
+        printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
     }
 
-    printf("EOT is %dm %.0fs\n", (int)s.eot, fabs(conv(s.eot)));
+    printf("EOT is %dm %.0fs\n", (int)s->eot, fabs(conv(s->eot)));
     return 0;
 }
 
 void graph(){   /* Generate a list for the entire year 2000 */
     short i;
     for(i=0;i<366;i++)
-        printf("%.2f,", sun_calc(i).eot);
+        printf("%.2f,", sun_calc(i)->eot);
     printf("\n");
 }
 
