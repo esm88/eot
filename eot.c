@@ -12,27 +12,26 @@
 #include <ctype.h>
 #include "sun.h"
 
-const char *signs[] = { "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
-    "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces" };
+struct ymd date = { 0, 1, 1 };  /* Default date is Jan 1 */
 
 int main(int argc, char *argv[]){
 
+    const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
+        "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
     float days;     /* Days since 2000-01-01 00:00 */
     struct sun *s;  /* Pointer to the sun paramaters from sun.c */
     time_t current;
-    struct ymd date;
-    short flags = 0;    /* Flags for -j, -e, DATE input */
+    short flags = 0;    /* Flags for various options/arguments */
 
     while(--argc) {     /* Only run if there are still arguments */
         if(argv[argc][0] == '-' && isalpha(argv[argc][1])) {
-            if(argv[argc][2]) {
+            if(argv[argc][2]) {     /* is not a '\0' */
                 printf("I can only handle one option per '-'\n");
                 return 1;
             }
             switch(argv[argc][1]) {
             case 'g':
-                graph();
-                return 0;
+                return graph();
             case 'n':
                 flags = flags | NOW; break;
             case 'j':
@@ -56,13 +55,17 @@ int main(int argc, char *argv[]){
             }
             sscanf(argv[argc], "%d-%d-%d", &date.y, &date.m, &date.d);
             /* HOPE that the user supplies a valid date! */
-            days = ddays(&date);
+            if((date.y < 1950 || date.y > 2049)) {
+                printf("Please provide a date between 1950 and 2050\n");
+                return 1;
+            }
+            days = ddays();
             flags = flags | DATE;
         }
     }
 
 
-    if(!(flags & DATE)) {
+    if(!(flags & DATE)) {   /* Only enter this block if no date supplied */
         if((flags & NOW) && (flags & MIDNIGHT)) {
             printf("You cannot combine -m and -n options\n");
             return 1;
@@ -90,11 +93,6 @@ int main(int argc, char *argv[]){
         printf("JD: %.3f\n", days + 2451545.0);
 
     s = sun_calc(days);
-
-    if(!s->dist) {   /* Distance should never be 0, so an error occurred */
-        printf("Please enter a date between the years 1950 and 2049\n");
-        return 1;
-    }
 
     if(s->ra >= 360) {
         s->ra = s->ra - 360;
@@ -125,11 +123,41 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void graph(){   /* Generate a list for the entire year 2000 */
-    short i;
-    for(i=0;i<366;i++)
+int ddays(){    /* Calculates days from 2000-01-01 */
+
+    time_t posix;
+    struct tm intime;
+
+    intime.tm_year = date.y - 1900;
+    intime.tm_mon = date.m - 1;
+    intime.tm_mday = date.d;
+    intime.tm_hour = 0;
+    intime.tm_min = 0;
+    intime.tm_sec = 0;
+
+    posix = timegm(&intime);
+    /* timegm: non-standard GNU extension. Also present on the BSDs. */
+
+    return((posix - Y2K) / 86400);
+}
+
+int graph(){   /* Generate list for an entire year */
+
+    short i, end;
+
+    fprintf(stderr, "Year? ");  /* stderr prevents redirection into file */
+    scanf("%d", &date.y);
+    if((date.y < 1950 || date.y > 2049)) {
+        fprintf(stderr, "Enter a year between 1950 and 2049\n");
+        return 1;
+    }
+    i = ddays();        /* Start date */
+    end = i + 366;      /* End date */
+
+    while(i++ < end)
         printf("%.2f,", sun_calc(i)->eot);
     printf("\n");
+    return 0;
 }
 
 float conv(const float num){

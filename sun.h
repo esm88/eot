@@ -14,13 +14,12 @@
 #define MIDNIGHT 64
 
 #define DPR (180.0 / 3.14159265)    /* Degrees per radian */
-#define MAX_DAY 18262.5             /* Max days from J2000.0 */
 
 struct sun { float ra, dec, lon, dist, eot; };
 struct ymd { int y, m, d; };
 
 double mod(double, double);     /* Floating point modulo function */
-int ddays(const struct ymd *date);    /* Calculates days from 2000-01-01 */
+int ddays();    /* Calculates days from 2000-01-01 */
 struct sun *sun_calc(const float);
 float conv(const float); /* Convert fractional part to mins or secs */
-void graph();
+int graph();

@@ -6,7 +6,6 @@
 /* Accuracy (1950-2050): R.A./Dec: 1.0'; EOT: 3.5s          */
 /************************************************************/
 
-#include <stdio.h>
 #include "sun.h"
 struct sun sol; /* Stores sun parameters */
 
@@ -17,11 +16,6 @@ struct sun *sun_calc(const float n){ /* n = days since J2000.0 epoch */
     double lambda;  /* Ecliptic longitude */
     double epsilon; /* Obliquity of ecliptic */
     double alpha;   /* Right ascension */
-
-    if(fabs(n) > (MAX_DAY)) {
-        sol.dist = 0;   /* indicates error condition */
-        return &sol;
-    }
 
     L = 280.460 + 0.9856474 * n;
     L = mod(L, 360);    /* Put L in range 0 - 360 */
