@@ -48,6 +48,10 @@ display ecliptic longitude in 'zodiacal' format. Used by astrologers. This uses 
 The star sign shown with -z may be \fBwrong\fR when very close to the 'cusp'
 
 -g overrides all other options
+
+Legacy systems may give incorrect results on dates before 1970-01-01 or after 2038-01-18
+
+Systems other than BSD or GNU/Linux will consider the current date based on local time rather than GMT
 .SH SEE ALSO
 \fBlmt\fR(1), \fBdays\fR(1)
 .SH COPYRIGHT

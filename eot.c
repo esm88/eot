@@ -135,8 +135,12 @@ int ddays(){    /* Calculates days from 2000-01-01 */
     intime.tm_min = 0;
     intime.tm_sec = 0;
 
-    posix = timegm(&intime);
+    #if defined(__linux__) || defined(__bsd__)
+    posix = timegm(&intime);    /* Prefer timegm() to mktime() */
     /* timegm: non-standard GNU extension. Also present on the BSDs. */
+    #else
+    posix = mktime(&intime);    /* Fallback if timegm not available */
+    #endif
 
     return((posix - Y2K) / 86400);
 }
