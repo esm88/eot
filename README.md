@@ -45,7 +45,8 @@ EOT : minutes.seconds
 
 Here is an example:
 
-```12.15 ∠-3.43
+```
+12.15 ∠-3.43
 0.45 ∠4.50
 ```
 
