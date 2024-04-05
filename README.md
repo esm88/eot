@@ -40,7 +40,8 @@ The results are displayed in both register X and Y, using CMPLX mode. This allow
 ```R.A.: hours.minutes
 Dec.: degrees.minutes
 Long: degrees.minutes
-EOT : minutes.seconds```
+EOT : minutes.seconds
+```
 
 Here is an example:
 
