@@ -33,8 +33,24 @@ This will generate a csv file and run an Octave script
 
 **Free42 version**
 
-I have also written an RPN version for the Free42 calculator (`eot.42s`). Execute EOT. The result is displayed in register X in minutes and seconds, separated by a decimal point. Make sure you are in degrees mode.
+I have also written an RPN version for the Free42 calculator (`eot.42s`). To get the sun parameters for today, enter **0** and execute SUN. If you want a specific date, enter the date in `YYYY.MMDD` format, for example: `2024.0401` for April 1st, 2024. Execute SUN.
 
-Note: This version will not work with the original HP-42S as it requires the TIME functions. It will however work on a DM42.
+The results are displayed in both register X and Y, using CMPLX mode. This allows 4 parameters to be shown at once. Register X shows the right ascension and the angle part shows the declination. Register Y shows the ecliptic longitude and the angle part is the equation of time. Although decimal points are shown, the results are actually in the following units:
+
+```R.A.: hours.minutes
+Dec.: degrees.minutes
+Long: degrees.minutes
+EOT : minutes.seconds```
+
+Here is an example:
+
+```12.15 ∠-3.43
+0.45 ∠4.50```
+
+Here, the parameters are 0h 45m right ascension, 4° 50m declination, 12° 15m ecliptic longitude, and the equation of time is -3m 43s.
+
+Note that the Free42 version uses the built in DDAYS function. The 'current' date will be based on your local time rather than GMT.
+
+The Free42 version will not work with the original HP-42S as it requires the TIME functions. It will however work on a DM42. Make sure you are in DEGREES mode!
 
 There is also an HP-15C version (`eot.15c`). This uses a simpler algorithm. Enter the day number (of year) and run LBL A. It is not as accurate as the C and Free42 versions.

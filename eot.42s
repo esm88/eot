@@ -1,68 +1,94 @@
-00 { 214-Byte Prgm }
-01▸LBL "EOT"
-02 YMD
-03 2000.0101
-04 DATE
-05 DDAYS
-06 STO "N"
-07 ENTER
-08 ENTER
-09 0.9856474
-10 ×
-11 280.46
-12 +
-13 360
-14 MOD
-15 STO "L"
-16 X<>Y
-17 0.9856003
-18 ×
-19 357.528
-20 +
-21 360
-22 MOD
-23 ENTER
-24 ENTER
-25 2
-26 ×
-27 SIN
-28 0.020
-29 ×
-30 X<>Y
-31 SIN
-32 1.915
-33 ×
-34 +
-35 +
-36 STO "LAMBDA"
-37 TAN
-38 23.439
-39 RCL "N"
-40 0.0000004
-41 ×
-42 -
-43 COS
-44 ×
-45 ATAN
-46 STO "A"
-47 RCL "LAMBDA"
-48 90
-49 X>Y?
-50 GTO "DONE"
-51 180
-52 STO+ "A"
-53 RCL "LAMBDA"
-54 270
-55 X>Y?
-56 GTO "DONE"
-57 180
-58 STO+ "A"
-59▸LBL "DONE"
-60 RCL "L"
-61 RCL "A"
-62 -
-63 4
-64 ×
-65 →HMS
-66 FIX 02
-67 .END.
+ { 245-Byte Prgm }
+▸LBL "SUN"
+ POLAR
+ YMD
+ X=0?
+ DATE
+ 2000.0101
+ X<>Y
+ DDAYS
+ STO "N"
+ ENTER
+ ENTER
+ 0.9856474
+ ×
+ 280.46
+ +
+ 360
+ MOD
+ STO "L"
+ X<>Y
+ 0.9856003
+ ×
+ 357.528
+ +
+ 360
+ MOD
+ ENTER
+ ENTER
+ 2
+ ×
+ SIN
+ 0.02
+ ×
+ X<>Y
+ SIN
+ 1.915
+ ×
+ +
+ +
+ STO "LAMBDA"
+ SIN
+ 23.439
+ RCL "N"
+ 4ᴇ-7
+ ×
+ -
+ ENTER
+ R↓
+ SIN
+ ×
+ ASIN
+ STO "D"
+ R↑
+ COS
+ RCL "LAMBDA"
+ ENTER
+ R↓
+ TAN
+ ×
+ ATAN
+ STO "A"
+ R↑
+ 90
+ X>Y?
+ GTO "DONE"
+ 180
+ STO+ "A"
+ R↓
+ R↓
+ 270
+ X>Y?
+ GTO "DONE"
+ 180
+ STO+ "A"
+▸LBL "DONE"
+ RCL "L"
+ RCL "A"
+ -
+ 4
+ ×
+ →HMS
+ FIX 02
+ RCL "LAMBDA"
+ →HMS
+ X<>Y
+ COMPLEX
+ RCL "A"
+ 15
+ ÷
+ →HMS
+ RCL "D"
+ →HMS
+ COMPLEX
+ .END.
