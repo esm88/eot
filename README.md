@@ -46,7 +46,8 @@ EOT : minutes.seconds
 Here is an example:
 
 ```12.15 ∠-3.43
-0.45 ∠4.50```
+0.45 ∠4.50
+```
 
 Here, the parameters are 0h 45m right ascension, 4° 50m declination, 12° 15m ecliptic longitude, and the equation of time is -3m 43s.
 
