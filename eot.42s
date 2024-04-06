@@ -1,4 +1,4 @@
- { 245-Byte Prgm }
+ { 266-Byte Prgm }
 ▸LBL "SUN"
  POLAR
  YMD
@@ -7,6 +7,11 @@
  2000.0101
  X<>Y
  DDAYS
+ FC? 10
+ GTO "MAIN"
+ 0.5
+ -
+▸LBL "MAIN"
  STO "N"
  ENTER
  ENTER

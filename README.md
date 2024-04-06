@@ -47,11 +47,13 @@ EOT : minutes.seconds
 Here is an example:
 
 ```
-12.15 ∠-3.43
-0.45 ∠4.50
+Y: 12.15 ∠-3.43
+X: 0.45 ∠4.50
 ```
 
 Here, the parameters are 0h 45m right ascension, 4° 50m declination, 12° 15m ecliptic longitude, and the equation of time is -3m 43s.
+
+**FLAG 10** controls whether the calculations will be for noon (12h) or midnight (00h). For noon, flag 10 should be **clear** (`CF 10`). For midnight, flag 10 should be **set** (`SF 10`).
 
 Note that the Free42 version uses the built in DDAYS function. The 'current' date will be based on your local time rather than GMT.
 
