@@ -113,6 +113,7 @@ int main(int argc, char *argv[]){
         printf("Long= %ddeg %.fm\n", (int)s->lon, conv(s->lon));
         printf("Dist= %.4f AU\n", s->dist);
         gha = ((days - (int)days) + ((s->eot) / 1440)) * 24;
+                    /* 1440 minutes in a day ---^ */
         printf("GHA = %dh %dm %ds\n", (int)gha, (int)conv(gha),
             (int)((conv(gha) - (int)conv(gha)) * 60));  /* seconds! */
     }
