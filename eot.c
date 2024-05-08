@@ -18,7 +18,8 @@ int main(int argc, char *argv[]){
 
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
-    float days;     /* Days since 2000-01-01 00:00 */
+    double days;     /* Days since 2000-01-01 00:00 */
+    float gha;
     struct sun *s;  /* Pointer to the sun paramaters from sun.c */
     time_t current;
     short flags = 0;    /* Flags for various options/arguments */
@@ -111,6 +112,9 @@ int main(int argc, char *argv[]){
         printf("Dec.= %+ddeg %.fm\n", (int)s->dec, fabs(conv(s->dec)));
         printf("Long= %ddeg %.fm\n", (int)s->lon, conv(s->lon));
         printf("Dist= %.4f AU\n", s->dist);
+        gha = ((days - (int)days) + ((s->eot) / 1440)) * 24;
+        printf("GHA = %dh %dm %ds\n", (int)gha, (int)conv(gha),
+            (int)((conv(gha) - (int)conv(gha)) * 60));  /* seconds! */
     }
 
     if(flags & ZODIAC) {
