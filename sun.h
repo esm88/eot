@@ -12,6 +12,7 @@
 #define ZODIAC 16
 #define VERBOSE 32
 #define MIDNIGHT 64
+#define TIME 128
 
 #define DPR (180.0 / 3.14159265)    /* Degrees per radian */
 
@@ -23,3 +24,4 @@ int ddays();    /* Calculates days from 2000-01-01 */
 struct sun *sun_calc(const float);
 float conv(const float); /* Convert fractional part to mins or secs */
 int graph();
+void printtime(char);

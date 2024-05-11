@@ -21,7 +21,7 @@ https://en.wikipedia.org/wiki/Astronomical_Almanac
 
 `$ eot`
 
-To get more parameters of the sun (right ascension, declination, ecliptic longitude, distance, GHA):
+To get more parameters of the sun (right ascension, declination, ecliptic longitude, distance):
 
 `$ eot -v`
 
@@ -30,6 +30,12 @@ To get more parameters of the sun (right ascension, declination, ecliptic longit
 `./graph.sh`
 
 This will generate a csv file and run an Octave script
+
+**For a live clock:**
+
+`./live.sh`
+
+This will give a running clock of the currrent GHA/LHA, GAST/LAST, and EOT
 
 **Free42 version**
 

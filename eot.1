@@ -34,11 +34,15 @@ use midnight (00:00) instead of noon (12:00)
 
 .TP
 .B -n
-give the Equation of Time for \fBnow\fR (instead of noon of the current GMT date). This option has no effect when the user supplies their own DATE.
+give the Equation of Time for \fBnow\fR (instead of noon of the current GMT date). This option has no effect when the user supplies their own DATE. Also displays the same parameters as the -t option
+
+.TP
+.B -t
+Displays the Greenwich Hour Angle (GHA), Greenwich Apparent Solar Time (GAST), Local Hour Angle (LHA), and Local Apparent Solar Time (LAST)
 
 .TP
 .B -v
-verbose mode. Display the sun's right ascension, declination, ecliptic longitude, distance, and Greenwich Hour Angle (GHA)
+verbose mode. Display the sun's right ascension, declination, ecliptic longitude, and distance
 
 .TP
 .B -z

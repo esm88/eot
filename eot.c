@@ -12,14 +12,18 @@
 #include <ctype.h>
 #include "sun.h"
 
+/* User's longitude (negative is west, positive is east) */
+#define LONGITUDE -3.75
+
 struct ymd date = { 0, 1, 1 };  /* Default date is Jan 1 */
+float ha, ast;      /* Hour Angle, Apparent Solar Time */
+short secs;
 
 int main(int argc, char *argv[]){
 
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
-    double days;     /* Days since 2000-01-01 00:00 */
-    float gha;
+    double days;        /* Days since 2000-01-01 00:00 */
     struct sun *s;  /* Pointer to the sun paramaters from sun.c */
     time_t current;
     short flags = 0;    /* Flags for various options/arguments */
@@ -34,7 +38,7 @@ int main(int argc, char *argv[]){
             case 'g':
                 return graph();
             case 'n':
-                flags = flags | NOW; break;
+                flags = flags | NOW | TIME; break;
             case 'j':
                 flags = flags | JULIAN; break;
             case 'a':
@@ -45,6 +49,8 @@ int main(int argc, char *argv[]){
                 flags = flags | MIDNIGHT; break;
             case 'v':
                 flags = flags | VERBOSE; break;
+            case 't':
+                flags = flags | TIME; break;
             default:
                 printf("-%c: invalid option\n", argv[argc][1]);
                 return 1;
@@ -112,10 +118,17 @@ int main(int argc, char *argv[]){
         printf("Dec.= %+ddeg %.fm\n", (int)s->dec, fabs(conv(s->dec)));
         printf("Long= %ddeg %.fm\n", (int)s->lon, conv(s->lon));
         printf("Dist= %.4f AU\n", s->dist);
-        gha = ((days - (int)days) + ((s->eot) / 1440)) * 24;
+    }
+
+    if(flags & TIME) {
+        ha = ((days - (int)days) + ((s->eot) / 1440)) * 24;
                     /* 1440 minutes in a day ---^ */
-        printf("GHA = %dh %dm %ds\n", (int)gha, (int)conv(gha),
-            (int)((conv(gha) - (int)conv(gha)) * 60));  /* seconds! */
+        printtime('G');     /* "Greenwich" */
+
+        ha = ha + (LONGITUDE / 15);    /* 15 degrees per hour rotation */
+        if(ha > 24)         /* Correct overflow */
+            ha = ha - 24;
+        printtime('L');     /* "Local" */
     }
 
     if(flags & ZODIAC) {
@@ -124,7 +137,7 @@ int main(int argc, char *argv[]){
         printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
     }
 
-    printf("EOT is %dm %.0fs\n", (int)s->eot, fabs(conv(s->eot)));
+    printf("EOT is %+dm %.0fs\n", (int)s->eot, fabs(conv(s->eot)));
     return 0;
 }
 
@@ -171,4 +184,21 @@ int graph(){   /* Generate list for an entire year */
 
 float conv(const float num){
     return ((num - (int)num) * 60);
+}
+
+void printtime(char c){
+
+    if(ha < 0)          /* Correct underflow */
+        ha = ha + 24;
+    secs = (int)((conv(ha) - (int)conv(ha)) * 60);
+    putchar(c);
+    printf("HA = %02d:%02d:%02d ", (int)ha, (int)conv(ha), secs);
+    printf("(%ddeg %.fm)\n", (int)(ha * 15), conv(ha * 15));
+        /* 1 hour = 15 degrees */
+
+    ast = ha - 12;      /* Apparent Solar Time (AST) */
+    if(ast < 0)
+        ast = ast + 24;
+    putchar(c);
+    printf("AST= %02d:%02d:%02d\n\n", (int)ast, (int)conv(ast), secs);
 }
