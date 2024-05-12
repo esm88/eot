@@ -25,4 +25,4 @@ struct sun *sun_calc(const float);
 float conv(const float); /* Convert fractional part to mins or secs */
 int graph();
 void ha_ast(float, char);   /* Hour Angle and Apparent Solar Time */
-void printtime(float);
+void printtime(float, int);

@@ -37,7 +37,7 @@ This will generate a csv file and run an Octave script
 
 This will give a running clock of the currrent GMT/LMT, GHA/LHA, GAST/LAST, and EOT
 
-Note: 'local' is based on the longitude as defined by the LONGITUDE constant. Please change to your **own** value (negative values are west of Greenwish).
+Note: 'local' is based on the longitude as defined by the LONGITUDE constant. Please change to your **own** value (negative values are west of Greenwich).
 
 **Free42 version**
 

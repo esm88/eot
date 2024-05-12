@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
     double days;        /* Days since 2000-01-01 00:00 */
     struct sun *s;      /* Pointer to the sun paramaters from sun.c */
-    float mt, ha;       /* Mean Time, Hour Angle */
+    float mt, ha, st;   /* Mean Time, Hour Angle, Sidereal Time */
     time_t current;
     short flags = 0;    /* Flags for various options/arguments */
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
             case 'g':
                 return graph();
             case 'n':
-                flags = flags | NOW | TIME; break;
+                flags = flags | NOW | TIME | JULIAN; break;
             case 'j':
                 flags = flags | JULIAN; break;
             case 'a':
@@ -70,7 +70,6 @@ int main(int argc, char *argv[]){
         }
     }
 
-
     if(!(flags & DATE)) {   /* Only enter this block if no date supplied */
         if((flags & NOW) && (flags & MIDNIGHT)) {
             printf("You cannot combine -m and -n options\n");
@@ -96,7 +95,7 @@ int main(int argc, char *argv[]){
         printf("Day: J2000.0 %+.3f\n", days);
 
     if(flags & JULIAN)
-        printf("JD: %.3f\n", days + 2451545.0);
+        printf("JD: %.5f\n", days + 2451545.0);
 
     s = sun_calc(days);
 
@@ -105,7 +104,7 @@ int main(int argc, char *argv[]){
         s->lon -= 360;
     }
 
-    s->ra = s->ra / 15;   /* 15 degrees = 1 hour */
+    s->ra = s->ra / 15; /* 15 degrees = 1 hour */
     if(s->ra < 0)
         s->ra += 24;    /* Fix negative R.A. values */
 
@@ -119,6 +118,12 @@ int main(int argc, char *argv[]){
         printf("Dist= %.4f AU\n", s->dist);
     }
 
+    if(flags & ZODIAC) {
+        printf("%s ", signs[(int)(s->lon/30)]);
+        s->lon = mod(s->lon,30);
+        printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
+    }
+
     if(flags & TIME) {
 
         mt = ((days - (int)days) * 24) + 0.00001;
@@ -128,31 +133,22 @@ int main(int argc, char *argv[]){
 
         ha = mt + ((s->eot) / 60);      /* GHA */
         mt -= 12;                       /* GMT */
-        if(mt < 0)
-            mt += 24;
-        printf("\nGMT ");
-        printtime(mt);
-        printf("\n");
-
-        mt += (LONGITUDE / 15.0);       /* LMT */
-        if(mt > 24)
-            mt -= 24;
-        if(mt < 0)
-            mt += 24;
-        printf("LMT ");
-        printtime(mt);
-        printf("\n\n");
-
         ha_ast(ha, 'G');                /* "Greenwich" */
+        st = ha + s->ra;                /* GMST */
+        printf("GMT ");
+        printtime(mt, 1);
+        printf("GMST");
+        printtime(st, 1);
 
         ha += (LONGITUDE / 15.0);       /* LHA */
         ha_ast(ha, 'L');                /* "Local" */
-    }
-
-    if(flags & ZODIAC) {
-        printf("%s ", signs[(int)(s->lon/30)]);
-        s->lon = mod(s->lon,30);
-        printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
+        mt += (LONGITUDE / 15.0);       /* LMT */
+        st = ha + s->ra;                /* LMST */
+        printf("LMT ");
+        printtime(mt, 1);
+        printf("LMST");
+        printtime(st, 1);
+        putchar('\n');
     }
 
     printf("EOT is %+dm %.0fs\n", (int)s->eot, fabs(conv(s->eot)));
@@ -208,29 +204,30 @@ void ha_ast(float ha, char c){
 
     float ast;          /* Apparent Solar Time (AST) */
 
-    if(ha > 24)         /* Correct overflow */
-        ha -= 24;
-    if(ha < 0)          /* Correct underflow */
-        ha += 24;
+    putchar('\n');
     putchar(c);
     printf("HA ");
-    printtime(ha);
+    printtime(ha, 0);
     printf(" (%ddeg %.fm)\n", (int)(ha * 15), conv(ha * 15));
 
     ast = ha - 12;
-    if(ast < 0)
-        ast += 24;
     putchar(c);
     printf("AST");
-    printtime(ast);
-    printf("\n\n");
+    printtime(ast, 1);
 }
 
-void printtime(float hours){
+void printtime(float hours, int n){
 
     short mins, secs;
+
+    if(hours > 24)      /* Correct overflow */
+        hours -= 24;
+    if(hours < 0)       /* Correct underflow */
+        hours += 24;
 
     mins = (int)conv(hours);
     secs = (int)((conv(hours) - mins) * 60);
     printf("= %02d:%02d:%02d", (int)hours, mins, secs);
+    if(n)
+        putchar('\n');
 }
