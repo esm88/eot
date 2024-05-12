@@ -51,6 +51,13 @@ struct sun *sun_calc(const float n){ /* n = days since J2000.0 epoch */
     sol.lon = lambda;
     sol.dist = 1.00014 - (0.01671 * (cos(g))) - (0.00014 * cos(2 * g));
     sol.eot = (L - alpha) * 4;
+
+    sol.ra /= 15;           /* 15 degrees = 1 hour */
+    sol.ra = correct(sol.ra);
+    sol.lon /= 15;          /* correct() needs hours, not degrees */
+    sol.lon = correct(sol.lon);
+    sol.lon *= 15;
+
     return &sol;
 }
 

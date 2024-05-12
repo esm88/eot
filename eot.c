@@ -99,18 +99,6 @@ int main(int argc, char *argv[]){
 
     s = sun_calc(days);
 
-    if(s->ra >= 360) {
-        s->ra -= 360;
-        s->lon -= 360;
-    }
-
-    s->ra = s->ra / 15; /* 15 degrees = 1 hour */
-    if(s->ra < 0)
-        s->ra += 24;    /* Fix negative R.A. values */
-
-    if(s->lon < 0)
-        s->lon += 360;  /* Fix negative longitude values */
-
     if(flags & VERBOSE) {
         printf("R.A.= %dh %.0fm\n", (int)s->ra, conv(s->ra));
         printf("Dec.= %+ddeg %.fm\n", (int)s->dec, fabs(conv(s->dec)));
@@ -132,18 +120,26 @@ int main(int argc, char *argv[]){
         /* numbers causes uneven jumping of the seconds)            */
 
         ha = mt + ((s->eot) / 60);      /* GHA */
+        ha = correct(ha);
         mt -= 12;                       /* GMT */
-        ha_ast(ha, 'G');                /* "Greenwich" */
+        mt = correct(mt);
         st = ha + s->ra;                /* GMST */
+        st = correct(st);
+
+        ha_ast(ha, 'G');                /* "Greenwich" */
         printf("GMT ");
         printtime(mt, 1);
         printf("GMST");
         printtime(st, 1);
 
         ha += (LONGITUDE / 15.0);       /* LHA */
-        ha_ast(ha, 'L');                /* "Local" */
+        ha = correct(ha);
         mt += (LONGITUDE / 15.0);       /* LMT */
+        mt = correct(mt);
         st = ha + s->ra;                /* LMST */
+        st = correct(st);
+
+        ha_ast(ha, 'L');                /* "Local" */
         printf("LMT ");
         printtime(mt, 1);
         printf("LMST");
@@ -210,13 +206,10 @@ void ha_ast(float ha, char c){
     putchar(c);
     printf("HA ");
     printtime(ha, 0);
-    if(ha > 24)         /* Correct overflow */
-        ha -= 24;
-    if(ha < 0)          /* Correct underflow */
-        ha += 24;
     printf(" (%ddeg %.fm)\n", (int)(ha * 15), conv(ha * 15));
 
     ast = ha - 12;
+    ast = correct(ast);
     putchar(c);
     printf("AST");
     printtime(ast, 1);
@@ -226,14 +219,18 @@ void printtime(float hours, int n){
 
     short mins, secs;
 
-    if(hours > 24)      /* Correct overflow */
-        hours -= 24;
-    if(hours < 0)       /* Correct underflow */
-        hours += 24;
-
     mins = (int)conv(hours);
     secs = (int)((conv(hours) - mins) * 60);
     printf("= %02d:%02d:%02d", (int)hours, mins, secs);
     if(n)
         putchar('\n');
+}
+
+float correct(float hours){     /* Fix out-of-range values */
+
+    if(hours < 24)
+        hours += 24;
+    if(hours > 24)
+        hours -= 24;
+    return hours;
 }
