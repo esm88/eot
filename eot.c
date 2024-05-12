@@ -166,12 +166,14 @@ int ddays(){    /* Calculates days from 2000-01-01 */
     intime.tm_hour = 0;
     intime.tm_min = 0;
     intime.tm_sec = 0;
+    intime.tm_isdst = 0;
 
     #if defined(__linux__) || defined(__bsd__)
-    posix = timegm(&intime);    /* Prefer timegm() to mktime() */
-    /* timegm: non-standard GNU extension. Also present on the BSDs. */
+        posix = timegm(&intime);    /* Prefer timegm() to mktime() */
+        /* timegm: non-standard GNU extension. Also present on the BSDs. */
     #else
-    posix = mktime(&intime);    /* Fallback if timegm not available */
+        /* Fallback if timegm not available */
+        posix = mktime(&intime) - timezone;
     #endif
 
     return((posix - Y2K) / 86400);
@@ -208,6 +210,10 @@ void ha_ast(float ha, char c){
     putchar(c);
     printf("HA ");
     printtime(ha, 0);
+    if(ha > 24)         /* Correct overflow */
+        ha -= 24;
+    if(ha < 0)          /* Correct underflow */
+        ha += 24;
     printf(" (%ddeg %.fm)\n", (int)(ha * 15), conv(ha * 15));
 
     ast = ha - 12;
