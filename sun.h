@@ -1,3 +1,4 @@
+#include <time.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -20,7 +21,7 @@ struct sun { float ra, dec, lon, dist, eot; };
 struct ymd { int y, m, d; };
 
 double mod(double, double);     /* Floating point modulo function */
-int ddays();    /* Calculates days from 2000-01-01 */
+int ddays(struct ymd);    /* Calculates days from 2000-01-01 */
 struct sun *sun_calc(const float);
 float conv(const float); /* Convert fractional part to mins or secs */
 int graph();

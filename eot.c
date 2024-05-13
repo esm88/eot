@@ -15,10 +15,9 @@
 /* User's longitude (negative is west, positive is east) */
 #define LONGITUDE -3.75
 
-struct ymd date = { 0, 1, 1 };  /* Default date is Jan 1 */
-
 int main(int argc, char *argv[]){
 
+    struct ymd date;
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
     double days;        /* Days since 2000-01-01 00:00 */
@@ -65,7 +64,7 @@ int main(int argc, char *argv[]){
                 printf("Please provide a date between 1950 and 2050\n");
                 return 1;
             }
-            days = ddays();
+            days = ddays(date);
             flags = flags | DATE;
         }
     }
@@ -151,32 +150,9 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-int ddays(){    /* Calculates days from 2000-01-01 */
-
-    time_t posix;
-    struct tm intime;
-
-    intime.tm_year = date.y - 1900;
-    intime.tm_mon = date.m - 1;
-    intime.tm_mday = date.d;
-    intime.tm_hour = 0;
-    intime.tm_min = 0;
-    intime.tm_sec = 0;
-    intime.tm_isdst = 0;
-
-    #if defined(__linux__) || defined(__bsd__)
-        posix = timegm(&intime);    /* Prefer timegm() to mktime() */
-        /* timegm: non-standard GNU extension. Also present on the BSDs. */
-    #else
-        /* Fallback if timegm not available */
-        posix = mktime(&intime) - timezone;
-    #endif
-
-    return((posix - Y2K) / 86400);
-}
-
 int graph(){   /* Generate list for an entire year */
 
+    struct ymd date = { 0, 1, 1 };  /* Year starts on Jan 1 */
     short i, end;
 
     fprintf(stderr, "Year? ");  /* stderr prevents redirection into file */
@@ -185,7 +161,7 @@ int graph(){   /* Generate list for an entire year */
         fprintf(stderr, "Enter a year between 1950 and 2049\n");
         return 1;
     }
-    i = ddays();        /* Start date */
+    i = ddays(date);    /* Start date */
     end = i + 366;      /* End date */
 
     while(i++ < end)
@@ -224,13 +200,4 @@ void printtime(float hours, int n){
     printf("= %02d:%02d:%02d", (int)hours, mins, secs);
     if(n)
         putchar('\n');
-}
-
-float correct(float hours){     /* Fix out-of-range values */
-
-    if(hours < 24)
-        hours += 24;
-    if(hours > 24)
-        hours -= 24;
-    return hours;
 }
