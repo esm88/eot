@@ -64,6 +64,10 @@ int main(int argc, char *argv[]){
                 printf("Please provide a date between 1950 and 2050\n");
                 return 1;
             }
+            if(checkdate(date)) {
+                printf("%d-%d-%d: not a real date\n", date.y, date.m, date.d);
+                return 1;
+            }
             days = ddays(date);
             flags = flags | DATE;
         }
@@ -184,7 +188,7 @@ void ha_ast(float ha, char c){
     printtime(ha, 0);
     printf(" (%ddeg %.fm)\n", (int)(ha * 15), conv(ha * 15));
 
-    ast = ha - 12;
+    ast = ha - 12;      /* AST is just the HA +/- 12h (either works) */
     ast = correct(ast);
     putchar(c);
     printf("AST");

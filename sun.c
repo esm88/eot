@@ -6,7 +6,6 @@
 /* Accuracy (1950-2050): R.A./Dec: 1.0'; EOT: 3.5s          */
 /************************************************************/
 
-#include <time.h>
 #include "sun.h"
 struct sun sol; /* Stores sun parameters */
 
@@ -98,4 +97,34 @@ float correct(float hours){     /* Fix out-of-range values */
     if(hours > 24)
         hours -= 24;
     return hours;
+}
+
+int checkdate(struct ymd date){ /* Returns 0 if valid, 1 otherwise */
+    switch(date.m) {
+    case 2:             /* Feb has 28 days, or 29 if leap-year */
+        if(date.d > 29)
+            return 1;
+        if((date.y % 4) && (date.d > 28))   /* non-leap year */
+            return 1;                       /* WRONG for 1900/2100 etc. */
+        return 0;
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+        if(date.d > 30) /* Apr/Jun/Sep/Nov have 30 days */
+            return 1;
+        return 0;
+    case 1:             /* All the rest have 31 days */
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+        if(date.d > 31)
+            return 1;
+        return 0;
+    default:            /* Error: month <1 or >12 */
+        return 1;
+    }
 }
