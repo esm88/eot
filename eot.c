@@ -158,13 +158,10 @@ int graph(){   /* Generate list for an entire year */
 
     struct ymd date = { 0, 1, 1 };  /* Year starts on Jan 1 */
     short i, end;
+    time_t current;
 
-    fprintf(stderr, "Year? ");  /* stderr prevents redirection into file */
-    scanf("%d", &date.y);
-    if((date.y < 1950 || date.y > 2049)) {
-        fprintf(stderr, "Enter a year between 1950 and 2049\n");
-        return 1;
-    }
+    time(&current);
+    date.y = (gmtime(&current)->tm_year) + 1900;
     i = ddays(date);    /* Start date */
     end = i + 366;      /* End date */
 

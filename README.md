@@ -29,7 +29,7 @@ To get more parameters of the sun (right ascension, declination, ecliptic longit
 
 `./graph.sh`
 
-This will generate a csv file and run an Octave script
+This will generate a csv file and run an Octave script, placing an 'x' on the current date
 
 **For a live clock:**
 

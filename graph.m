@@ -5,4 +5,7 @@ plot(x,y)
 grid on
 grid minor on
 axis([0,365])
-set (gca, "xaxislocation", "origin")
+hold on
+cur=gmtime(time()).yday
+plot(cur, y(cur+1), 'x')
+set(gca, "xaxislocation", "origin")
