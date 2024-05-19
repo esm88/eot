@@ -100,6 +100,8 @@ float correct(float hours){     /* Fix out-of-range values */
 }
 
 int checkdate(struct ymd date){ /* Returns 0 if valid, 1 otherwise */
+    if(date.d < 1)
+        return 1;
     switch(date.m) {
     case 2:             /* Feb has 28 days, or 29 if leap-year */
         if(date.d > 29)
