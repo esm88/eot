@@ -1,9 +1,8 @@
 /*************************************************************************/
-/* Equation of time & solar calculator                                   */
+/* Equation of time & solar clock program                                */
 /* Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3                */
-/* Gives the difference between Local Mean Time and Apparent Solar Time  */
 /* Equations sourced from The Astronomical Almanac:                      */
-/* https://en.wikipedia.org/wiki/Astronomical_Almanac                    */
+/* https://aa.usno.navy.mil/publications/asa_history                     */
 /*************************************************************************/
 
 #include <stdio.h>
@@ -25,33 +24,32 @@ int main(int argc, char *argv[]){
     float mt, ha, st;   /* Mean Time, Hour Angle, Sidereal Time */
     time_t current;
     short flags = 0;    /* Flags for various options/arguments */
+    short i;
 
     while(--argc) {     /* Only run if there are still arguments */
-        if(argv[argc][0] == '-' && isalpha(argv[argc][1])) {
-            if(argv[argc][2]) {     /* is not a '\0' */
-                printf("I can only handle one option per '-'\n");
-                return 1;
-            }
-            switch(argv[argc][1]) {
-            case 'g':
-                return graph();
-            case 'n':
-                flags = flags | NOW | TIME | JULIAN; break;
-            case 'j':
-                flags = flags | JULIAN; break;
-            case 'a':
-                flags = flags | VERBOSE | JULIAN | ZODIAC | DAY; break;
-            case 'z':
-                flags = flags | ZODIAC; break;
-            case 'm':
-                flags = flags | MIDNIGHT; break;
-            case 'v':
-                flags = flags | VERBOSE; break;
-            case 't':
-                flags = flags | TIME; break;
-            default:
-                printf("-%c: invalid option\n", argv[argc][1]);
-                return 1;
+        if(argv[argc][0] == '-') {
+            for(i = 1; argv[argc][i]; i++) {
+                switch(argv[argc][i]) {
+                case 'g':
+                    return graph();
+                case 'n':
+                    flags = flags | NOW ; break;
+                case 'j':
+                    flags = flags | JULIAN; break;
+                case 'a':
+                    flags = flags | VERBOSE | JULIAN | ZODIAC | DAY; break;
+                case 'z':
+                    flags = flags | ZODIAC; break;
+                case 'm':
+                    flags = flags | MIDNIGHT; break;
+                case 'v':
+                    flags = flags | VERBOSE; break;
+                case 't':
+                    flags = flags | TIME; break;
+                default:
+                    printf("-%c: invalid option\n", argv[argc][i]);
+                    return 1;
+                }
             }
         } else {
             if(flags & DATE) {

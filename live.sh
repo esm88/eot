@@ -1,2 +1,2 @@
 #!/bin/sh
-watch -n1 ./eot -n
+watch -n1 ./eot -ntj
