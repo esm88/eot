@@ -1,22 +1,19 @@
-/*************************************************************************/
-/* Equation of time & solar clock program                                */
-/* Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3                */
-/* Equations sourced from The Astronomical Almanac:                      */
-/* https://aa.usno.navy.mil/publications/asa_history                     */
-/*************************************************************************/
+/**********************************************************/
+/* Equation of time & solar clock program                 */
+/* Copyright (C) 2024 Ellie McNeill. Licensed under GPLv3 */
+/* Equations sourced from The Astronomical Almanac:       */
+/* https://aa.usno.navy.mil/publications/asa_history      */
+/**********************************************************/
 
 #include <stdio.h>
-#include <time.h>
-#include <string.h>
-#include <ctype.h>
 #include "sun.h"
 
 /* User's longitude (negative is west, positive is east) */
 #define LONGITUDE -3.75
 
-int main(int argc, char *argv[]){
+int main(int argc, const char *argv[]){
 
-    struct ymd date;
+    struct ymd date = { 0, 0, 0 };
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
     double days;        /* Days since 2000-01-01 00:00 */
@@ -56,8 +53,7 @@ int main(int argc, char *argv[]){
                 printf("Please provide only ONE date\n");
                 return 1;
             }
-            sscanf(argv[argc], "%d-%d-%d", &date.y, &date.m, &date.d);
-            /* HOPE that the user supplies a valid date! */
+            sscanf(argv[argc], "%hd-%hd-%hd", &date.y, &date.m, &date.d);
             if((date.y < 1950 || date.y > 2049)) {
                 printf("Please provide a date between 1950 and 2050\n");
                 return 1;
@@ -67,7 +63,7 @@ int main(int argc, char *argv[]){
                 return 1;
             }
             days = ddays(date);
-            flags = flags | DATE;
+            flags = flags | DATE | DAY;
         }
     }
 
@@ -83,7 +79,7 @@ int main(int argc, char *argv[]){
         else if(flags & MIDNIGHT)
             days = ((int)days) - 0.5;
         else
-            days = (int) days;
+            days = (int)days;
     }
 
     if((flags & DATE) && (flags & MIDNIGHT))
@@ -92,7 +88,7 @@ int main(int argc, char *argv[]){
     if(flags & DATE)
         printf("Date: %d-%d-%d\n", date.y, date.m, date.d);
 
-    if((flags & DATE) || (flags & DAY))
+    if(flags & DAY)
         printf("Day: J2000.0 %+.3f\n", days);
 
     if(flags & JULIAN)
@@ -173,7 +169,7 @@ float conv(const float num){
     return ((num - (int)num) * 60);
 }
 
-void ha_ast(float ha, char c){
+void ha_ast(const float ha, const char c){
 
     float ast;          /* Apparent Solar Time (AST) */
 
@@ -190,7 +186,7 @@ void ha_ast(float ha, char c){
     printtime(ast, 1);
 }
 
-void printtime(float hours, int n){
+void printtime(const float hours, const int n){
 
     short mins, secs;
 

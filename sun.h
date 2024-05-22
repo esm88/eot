@@ -1,6 +1,5 @@
 #include <time.h>
 #include <math.h>
-#include <stdlib.h>
 
 /* POSIX time at 2000-01-01 00:00 */
 #define Y2K 946684800
@@ -9,23 +8,21 @@
 #define DAY 1
 #define NOW 2
 #define DATE 4
-#define JULIAN 8
-#define ZODIAC 16
-#define VERBOSE 32
-#define MIDNIGHT 64
-#define TIME 128
-
-#define DPR (180.0 / 3.14159265)    /* Degrees per radian */
+#define TIME 8
+#define JULIAN 16
+#define ZODIAC 32
+#define VERBOSE 64
+#define MIDNIGHT 128
 
 struct sun { float ra, dec, lon, dist, eot; };
-struct ymd { int y, m, d; };
+struct ymd { short y, m, d; };
 
-double mod(double, double);     /* Floating point modulo function */
-int ddays(struct ymd);    /* Calculates days from 2000-01-01 */
-struct sun *sun_calc(const float);
-float conv(const float); /* Convert fractional part to mins or secs */
+double mod(double, const double);   /* Floating point modulo function */
+int ddays(const struct ymd);        /* Calculates days from 2000-01-01 */
+struct sun *sun_calc(const float);  /* Returns pointer to sun struct */
+float conv(const float); /* Converts fractional part to mins or secs */
 int graph();
-void ha_ast(float, char);   /* Hour Angle and Apparent Solar Time */
-void printtime(float, int);
-float correct(float);
-int checkdate(struct ymd);
+void ha_ast(const float, const char); /* Hour Angle & Apparent Solar Time */
+void printtime(const float, const int);
+float correct(float);               /* Makes sure hours are in range 0-24 */
+int checkdate(const struct ymd);    /* Returns 0 if date valid */

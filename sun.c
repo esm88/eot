@@ -7,6 +7,9 @@
 /************************************************************/
 
 #include "sun.h"
+
+#define DPR (180.0 / 3.14159265)    /* Degrees per radian */
+
 struct sun sol; /* Stores sun parameters */
 
 struct sun *sun_calc(const float n){ /* n = days since J2000.0 epoch */
@@ -61,12 +64,12 @@ struct sun *sun_calc(const float n){ /* n = days since J2000.0 epoch */
     return &sol;
 }
 
-double mod(double x, double y){ /* Floating-point modulo function */
+double mod(double x, const double y){ /* Floating-point modulo function */
     x = (x / y);
     return (x - (int)x) * y;
 }
 
-int ddays(struct ymd date){    /* Calculates days from 2000-01-01 */
+int ddays(const struct ymd date){    /* Calculates days from 2000-01-01 */
 
     time_t posix;
     struct tm intime;
@@ -99,7 +102,7 @@ float correct(float hours){     /* Fix out-of-range values */
     return hours;
 }
 
-int checkdate(struct ymd date){ /* Returns 0 if valid, 1 otherwise */
+int checkdate(const struct ymd date){ /* Returns 0 if valid, 1 otherwise */
     if(date.d < 1)
         return 1;
     switch(date.m) {
