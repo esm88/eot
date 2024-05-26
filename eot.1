@@ -1,0 +1,65 @@
+.TH EOT 1 "March 2024"
+.SH NAME
+eot - display the equation of time
+.SH SYNOPSIS
+.B eot
+[\fIOPTION\fR]... [\fIDATE\fR]
+.SH DESCRIPTION
+Display the Equation of Time for DATE, where DATE is an ISO 8601 date of the form YYYY-[M]M-[D]D.
+
+If no DATE is supplied, the current GMT date is used. Values given are for noon of the current GMT date.
+
+The Equation of Time is the difference between LMT (Local Mean Time) and AST (Apparent Solar Time) as shown by a sundial.
+
+Negative values indicate AST is behind LMT. Positive values indicate AST is ahead of LMT.
+
+Note that LMT is not the same as 'standard' time and will differ depending on your longitude and whether DST is in effect.
+.SH OPTIONS
+.TP
+.B -a
+enable \fBall\fR display options (-v, -j, -z)
+
+.TP
+.B -g
+graph mode. Output all EOT values for the current year (in decimal form). This can then be fed into a graphing program such as GNU Octave.
+
+
+.TP
+.B -j
+display the Julian date (JD)
+
+.TP
+.B -m
+use midnight (00:00) instead of noon (12:00)
+
+.TP
+.B -n
+give the Equation of Time for \fBnow\fR (instead of noon of the current GMT date). This option has no effect when the user supplies their own DATE.
+
+.TP
+.B -t
+Displays  Greenwich Mean Time (GMT), Local Mean Time (LMT), Greenwich Hour Angle (GHA), Local Hour Angle (LHA), Greenwich Apparent Solar Time (GAST), Local Apparent Solar Time (LAST), Greenwich Mean Sidereal Time (GMST), and Local Mean Sidereal Time (LMST)
+
+.TP
+.B -v
+verbose mode. Display the sun's right ascension, declination, ecliptic longitude, and distance
+
+.TP
+.B -z
+display ecliptic longitude in 'zodiacal' format. Used by astrologers. This uses the tropical zodiac and does not mean that the sun is actually in that particular constellation!
+
+.SH NOTES
+The star sign shown with -z may be \fBwrong\fR when very close to the 'cusp'
+
+-g overrides all other options
+
+.SH BUGS
+
+Legacy systems may give incorrect results on dates before 1970-01-01 or after 2038-01-18
+
+Due to how values are rounded, results may sometimes show values like 1h 60m. This should be read as 2h.
+
+.SH SEE ALSO
+\fBlmt\fR(1), \fBdays\fR(1)
+.SH COPYRIGHT
+Copyright (C) 2024 Ellie Neills. Licensed under GPLv3 (see LICENSE).

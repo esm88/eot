@@ -1,0 +1,99 @@
+ { 266-Byte Prgm }
+▸LBL "SUN"
+ POLAR
+ YMD
+ X=0?
+ DATE
+ 2000.0101
+ X<>Y
+ DDAYS
+ FC? 10
+ GTO "MAIN"
+ 0.5
+ -
+▸LBL "MAIN"
+ STO "N"
+ ENTER
+ ENTER
+ 0.9856474
+ ×
+ 280.46
+ +
+ 360
+ MOD
+ STO "L"
+ X<>Y
+ 0.9856003
+ ×
+ 357.528
+ +
+ 360
+ MOD
+ ENTER
+ ENTER
+ 2
+ ×
+ SIN
+ 0.02
+ ×
+ X<>Y
+ SIN
+ 1.915
+ ×
+ +
+ +
+ STO "LAMBDA"
+ SIN
+ 23.439
+ RCL "N"
+ 4ᴇ-7
+ ×
+ -
+ ENTER
+ R↓
+ SIN
+ ×
+ ASIN
+ STO "D"
+ R↑
+ COS
+ RCL "LAMBDA"
+ ENTER
+ R↓
+ TAN
+ ×
+ ATAN
+ STO "A"
+ R↑
+ 90
+ X>Y?
+ GTO "DONE"
+ 180
+ STO+ "A"
+ R↓
+ R↓
+ 270
+ X>Y?
+ GTO "DONE"
+ 180
+ STO+ "A"
+▸LBL "DONE"
+ RCL "L"
+ RCL "A"
+ -
+ 4
+ ×
+ →HMS
+ FIX 02
+ RCL "LAMBDA"
+ →HMS
+ X<>Y
+ COMPLEX
+ RCL "A"
+ 15
+ ÷
+ →HMS
+ RCL "D"
+ →HMS
+ COMPLEX
+ .END.
