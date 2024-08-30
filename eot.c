@@ -156,7 +156,7 @@ int graph(){   /* Generate list for an entire year */
 
     time(&current);
     date.y = (gmtime(&current)->tm_year) + 1900;
-    i = ddays(date);    /* Start date */
+    i = ddays(date) - 1;    /* Start date */
     end = i + 366;      /* End date */
 
     while(i++ < end)
