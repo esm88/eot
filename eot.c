@@ -98,7 +98,7 @@ int main(int argc, const char *argv[]){
 
     if(flags & VERBOSE) {
         printf("R.A.= %dh %.0fm\n", (int)s->ra, conv(s->ra));
-        printf("Dec.= %+ddeg %.fm\n", (int)s->dec, fabs(conv(s->dec)));
+        printf("Dec.= %+.0fdeg %.fm\n", s->dec, fabs(conv(s->dec)));
         printf("Long= %ddeg %.fm\n", (int)s->lon, conv(s->lon));
         printf("Dist= %.4f AU\n", s->dist);
     }
@@ -144,7 +144,7 @@ int main(int argc, const char *argv[]){
         putchar('\n');
     }
 
-    printf("EOT is %+dm %.0fs\n", (int)s->eot, fabs(conv(s->eot)));
+    printf("EOT is %+.0fm %.0fs\n", s->eot, fabs(conv(s->eot)));
     return 0;
 }
 
