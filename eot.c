@@ -11,9 +11,11 @@
 
 /* User's longitude (negative is west, positive is east) */
 #define LONGITUDE -3.75
+#define LATITUDE 56.0
 
 int main(int argc, const char *argv[]){
 
+    float alt;
     struct ymd date = { 0, 0, 0 };
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
@@ -44,6 +46,8 @@ int main(int argc, const char *argv[]){
                     flags = flags | VERBOSE; break;
                 case 't':
                     flags = flags | TIME; break;
+                case 'e':
+                    flags = flags | ALT; break;
                 default:
                     printf("-%c: invalid option\n", argv[argc][i]);
                     return 1;
@@ -109,6 +113,15 @@ int main(int argc, const char *argv[]){
         printf("%s ", signs[(int)(s->lon/30)]);
         s->lon = mod(s->lon,30);
         printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
+    }
+
+    if(flags & ALT) { /* This code is imperfect as it uses current Dec. */
+        alt = (90 - (LATITUDE)) + s->dec; /* insted of transit Dec. */
+        if(alt > 90)
+            alt = 180 - alt;
+        printf("Transit Alt: %.2fdeg\n", alt); /* Sunrise/set definition: */
+        if(alt < -(5.0 / 6.0))  /* 50 arcminutes below horizon */
+            printf("No sunrise for this day\n");
     }
 
     if(flags & TIME) {

@@ -13,6 +13,7 @@
 #define ZODIAC 32
 #define VERBOSE 64
 #define MIDNIGHT 128
+#define ALT 256
 
 struct sun { float ra, dec, lon, dist, eot; };
 struct ymd { short y, m, d; };
