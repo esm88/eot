@@ -16,7 +16,6 @@
 
 int main(int argc, const char *argv[]){
 
-    float alt;
     struct ymd date = { 0, 0, 0 };
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
@@ -116,35 +115,8 @@ int main(int argc, const char *argv[]){
         printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
     }
 
-    if(flags & ALT) { /* This code is imperfect as it uses current Dec. */
-                      /* insted of transit Dec. */
-        alt = (90 - (LATITUDE)) + s->dec;
-        if(alt > 90)
-            alt = 180 - alt;
-        printf("Transit Alt: %.2fdeg (solar noon)\n", alt);
-        if(alt < -(5.0 / 6.0))  
-            printf("No sunrise\n");
-
-                /* The 5/6th comes from sunrise/set definition: */
-                /* sun's centre 50 arcminutes below horizon */
-
-        alt = -(90 - (LATITUDE)) + s->dec;
-        if(alt < -90)
-            alt = -(alt + 180);
-        printf("Midnight Alt: %.2fdeg (solar midnight)\n", alt);
-        if((alt >= -18.0) && (alt < -12.0))
-            printf("No astronomical night. "
-                "Darkest is astronomical twilight.\n");
-        if((alt >= -12.0) && (alt < -6.0))
-            printf("No astronomical twilight. "
-                "Darkest is nautical twilight.\n");
-        if((alt >= -6.0) && (alt < (5.0 / 6.0)))
-            printf("No nautical twilight. "
-                "Darkest is civil twilight.\n");
-        if(alt >= -(5.0 / 6.0))
-            printf("No sunset\n");
-
-    }
+    if(flags & ALT)
+        altitude(s->dec, s->eot);
 
     if(flags & TIME) {
 
@@ -233,4 +205,43 @@ void printtime(const float hours, const int n){
     printf("= %02d:%02d:%02d", (int)hours, mins, secs);
     if(n)
         putchar('\n');
+}
+
+void altitude(const float dec, const float eot){
+
+    /* This code is imperfect as it uses current Dec. */
+    /* insted of transit/midnight Dec. */
+
+    float alt;  /* Sun's altitude (elevation) */
+    float tt;   /* Transit time */
+
+    tt = 12 - (LONGITUDE / 15.0) - (eot / 60.0);
+    printf("Transit time: ~%02d:%02d GMT\n", (int)tt, (int)conv(tt));
+
+    alt = (90 - (LATITUDE)) + dec;
+    if(alt > 90)
+        alt = 180 - alt;
+    printf("Transit Alt: %.1fdeg (solar noon)\n", alt);
+    if(alt < -(5.0 / 6.0))
+        printf("No sunrise\n");
+
+    /* The 5/6th comes from sunrise/set definition: */
+    /* sun's centre 50 arcminutes below horizon */
+
+    alt = -(90 - (LATITUDE)) + dec;
+    if(alt < -90)
+        alt = -(alt + 180);
+    printf("Midnight Alt: %.1fdeg (solar midnight)\n", alt);
+    if((alt >= -18.0) && (alt < -12.0))
+        printf("No astronomical night. "
+            "Darkest is astronomical twilight.\n");
+    if((alt >= -12.0) && (alt < -6.0))
+        printf("No astronomical twilight. "
+            "Darkest is nautical twilight.\n");
+    if((alt >= -6.0) && (alt < (5.0 / 6.0)))
+        printf("No nautical twilight. "
+            "Darkest is civil twilight.\n");
+    if(alt >= -(5.0 / 6.0))
+        printf("No sunset\n");
+
 }
