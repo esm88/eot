@@ -13,6 +13,7 @@
 #define LONGITUDE -3.75
 /* User's latitude */
 #define LATITUDE 56.0
+struct sun *s;      /* Pointer to the sun paramaters from sun.c */
 
 int main(int argc, const char *argv[]){
 
@@ -20,7 +21,6 @@ int main(int argc, const char *argv[]){
     const char *signs[] = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
         "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
     double days;        /* Days since 2000-01-01 00:00 */
-    struct sun *s;      /* Pointer to the sun paramaters from sun.c */
     float mt, ha, st;   /* Mean Time, Hour Angle, Sidereal Time */
     time_t current;
     short flags = 0;    /* Flags for various options/arguments */
@@ -115,9 +115,6 @@ int main(int argc, const char *argv[]){
         printf("%ddeg %.0fm\n", (int)s->lon, conv(s->lon));
     }
 
-    if(flags & ALT)
-        altitude(s->dec, s->eot);
-
     if(flags & TIME) {
 
         mt = ((days - (int)days) * 24) + 0.00001;
@@ -155,6 +152,10 @@ int main(int argc, const char *argv[]){
 
     printf("EOT is %c%dm %.0fs\n",  s->eot < 0 ? '-' : '+',
         abs((int)s->eot), fabs(conv(s->eot)));
+
+    if(flags & ALT) /* This must be called last as it changes stuff */
+        altitude(days);
+
     return 0;
 }
 
@@ -207,31 +208,36 @@ void printtime(const float hours, const int n){
         putchar('\n');
 }
 
-void altitude(const float dec, const float eot){
+void altitude(double d){
 
-    /* This code is imperfect as it uses current Dec. */
+    /* This code is imperfect as it uses noon (LMT) Dec. */
     /* insted of transit/midnight Dec. */
 
     float alt;  /* Sun's altitude (elevation) */
     float tt;   /* Transit time */
 
-    tt = 12 - (LONGITUDE / 15.0) - (eot / 60.0);
-    printf("Transit time: ~%02d:%02d GMT\n", (int)tt, (int)conv(tt));
+    d = ((int)d) - ((LONGITUDE / 15.0) / 24.0); /* Noon LMT */
+    s = sun_calc(d);
 
-    alt = (90 - (LATITUDE)) + dec;
+    tt = 12 - (LONGITUDE / 15.0) - (s->eot / 60.0);
+    printf("\nTransit time: ~%02d:%02d GMT\n", (int)tt, (int)conv(tt));
+
+    alt = (90 - (LATITUDE)) + s->dec;
     if(alt > 90)
         alt = 180 - alt;
-    printf("Transit Alt: %.1fdeg (solar noon)\n", alt);
+    printf("Transit Alt: %.1fdeg~ (solar noon)\n", alt);
     if(alt < -(5.0 / 6.0))
         printf("No sunrise\n");
+    d += 0.5;
+    s = sun_calc(d);    /* Recalculate for midnight LMT */
 
     /* The 5/6th comes from sunrise/set definition: */
     /* sun's centre 50 arcminutes below horizon */
 
-    alt = -(90 - (LATITUDE)) + dec;
+    alt = -(90 - (LATITUDE)) + s->dec;
     if(alt < -90)
         alt = -(alt + 180);
-    printf("Midnight Alt: %.1fdeg (solar midnight)\n", alt);
+    printf("Midnight Alt: %.1fdeg~ (solar midnight)\n", alt);
     if((alt >= -18.0) && (alt < -12.0))
         printf("No astronomical night. "
             "Darkest is astronomical twilight.\n");
