@@ -27,4 +27,4 @@ void ha_ast(const float, const char); /* Hour Angle & Apparent Solar Time */
 void printtime(const float, const int);
 float correct(float);               /* Makes sure hours are in range 0-24 */
 int checkdate(const struct ymd);    /* Returns 0 if date valid */
-void altitude(const float, const float);
+void altitude(double);
