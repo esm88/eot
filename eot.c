@@ -220,7 +220,7 @@ void altitude(double d){
     s = sun_calc(d);
 
     tt = 12 - (LONGITUDE / 15.0) - (s->eot / 60.0);
-    printf("\nTransit time: ~%02d:%02d GMT\n", (int)tt, (int)conv(tt));
+    printf("\nTransit time: ~%02d:%02d UTC\n", (int)tt, (int)conv(tt));
 
     alt = (90 - (LATITUDE)) + s->dec;
     if(alt > 90)
