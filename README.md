@@ -87,6 +87,6 @@ Additionally, the modern prime meridian (based on WGS84) is actually 5.3" east o
 
 I consider these inaccuracies negligible. If you require high precision for astronomy, consider other programs such as [XEphem](https://github.com/XEphem/XEphem) or [Cartes du Ciel](http://www.ap-i.net/skychart/)
 
-If you discover any bugs in the program, please report them to me: [github@esm.scot](mailto:github@esm.scot)
+If you discover any bugs in the program, please report them to me: [ellie@esm.me.uk](mailto:ellie@esm.me.uk)
 
 [1]: https://aa.usno.navy.mil/publications/asa_history
