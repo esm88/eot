@@ -1,0 +1,31 @@
+pre {
+  background: midnightblue;
+  color: white;
+  width: 80ch;
+  padding: 1ch;
+  margin-left: 3em;
+}
+
+code {
+  background: silver;
+  padding: 0.5ch;
+}
+
+.calc {
+  font-size: 200%;
+  margin-left: 1em;
+  color: black;
+  background: silver;
+  width: 16ch;
+  border: 1px solid;
+}
+
+table {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+td {
+  padding-left: 1em;
+  padding-right: 1em;
+}

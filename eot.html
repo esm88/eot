@@ -1,0 +1,198 @@
+<html>
+
+<head>
+<title>EOT</title>
+<meta charset="us-ascii">
+<link rel="stylesheet" type="text/css" href="main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body bgcolor="bisque" color="black">
+<font face="sans-serif" font-size="3pt">
+<table align="center" style="border-style:hidden; width:50em"><td>
+
+<h1 align="center">EOT</h1>
+<hr>
+
+<h2 align="center">Equation of time & solar clock program</h2>
+
+<p><code>eot.c</code> is a command line program for Unix-like<sup>&lowast;</sup> systems, developed by Ellie McNeill, GM5ELE.</p>
+
+<p>It is <a href="https://www.gnu.org/philosophy/free-sw.en.html">free software</a>, released under the GPLv3 license.</p>
+
+<p>It gives the difference between Local Mean Time and Apparent Solar Time.</p>
+
+<p>The program also gives various other parameters of the sun.</p>
+
+<p>It can also function as a clock, displaying 8 different kinds of time<sup>&dagger;</sup>.</p>
+
+<p>Equations were sourced from <a href="https://aa.usno.navy.mil/publications/asa_history">The Astronomical Almanac</a>.</p>
+
+<p>The latest version of the program can be obtained from GitHub:
+<a href="https://github.com/esm88/eot">https://github.com/esm88/eot</a></p>
+
+<figure style="margin-left:3em; width:562px">
+<img src="octave.png" title="GNU Octave graph" border=1>
+<figcaption style="background:silver">Fig 1: GNU Octave displaying the Equation of Time for the year AD 2024
+</figure>
+
+<h3>To install:</h3>
+
+<p>First, you should change the <code>LONGITUDE</code> constant in <code>eot.c</code> to your <i>own</i> longitude. The clock mode uses this to calculate the local times.
+<br><br>
+You can then compile, install, and run with:
+</p>
+
+<pre>
+% make
+# make install
+% eot
+</pre>
+
+<p>Sample output:</p>
+
+<pre>
+% ./eot -a 2024-7-18
+Date: 2024-7-18
+Day: J2000.0 +8965.000
+JD: 2460510.00000
+R.A.= 7h 53m
+Dec.= +20deg 53m
+Long= 116deg 21m
+Dist= 1.0163 AU
+Cancer 26deg 21m
+EOT is -6m 18s
+</pre>
+
+<h3>To get a fancy graph (GNU Octave required):</h3>
+
+<pre>
+% ./graph.sh
+</pre>
+
+<p>This will generate a csv file and run an Octave script, placing an '<font color="red">&times;</font>' on the current date (example image above).</p>
+
+<h3>For a live clock:</h3>
+
+<pre>
+% ./live.sh
+</pre>
+
+<p>This will give a running clock of the currrent:
+<ul>
+  <li>JD (Julian Day)</li>
+  <li>GMT/LMT (Greenwich/Local Mean Time)</li>
+  <li>GHA/LHA (Greenwich/Local Hour Angle)</li>
+  <li>GAST/LAST (Greenwich/Local Apparent Solar Time)</li>
+  <li>GMST/LMST (Greenwich/Local Mean Sidereal Time)</li>
+  <li>EOT (Equation of Time)</li>
+</ul>
+</p>
+
+<p><u>Note</u>: 'local' is based on the longitude as defined by the <code>LONGITUDE</code> constant. Please change to your <b>own</b> value (negative values are west of Greenwich).</p>
+<p>Sample output of the live clock mode:</p>
+
+<pre>
+Every 1.0s: ./eot -ntj
+
+JD: 2460509.45384
+
+GHA = 10:47:15 (161deg 49m)
+GAST= 22:47:15
+GMT = 22:53:32
+GMST= 18:38:32
+
+LHA = 10:32:15 (158deg 4m)
+LAST= 22:32:15
+LMT = 22:38:32
+LMST= 18:23:32
+
+EOT is -6m 16s
+</pre>
+
+<h3>Free42 version</h3>
+
+<p>I have also written an RPN version for the Free42 calculator (<code>eot.42s</code>). To get the sun parameters for today, enter <code>0</code> and execute <tt>SUN</tt>. If you want a specific date, enter the date in <tt>YYYY.MMDD</tt> format, for example: <code>2024.0401</code> for April 1st, 2024. Execute <tt>SUN</tt>.</p>
+
+<p>The results are displayed in both register X and Y, using CMPLX mode. This allows 4 parameters to be shown at once. Register X shows the right ascension and the angle part shows the declination. Register Y shows the ecliptic longitude and the angle part is the equation of time. Although decimal points are shown, the results are actually in the following units:</p>
+
+<table border=1 style="margin-left: 2em">
+  <tr>
+    <td>R.A.</td><td>hours.minutes</td>
+  </tr>
+  <tr>
+    <td>Dec.</td><td>degrees.minutes</td>
+  </tr>
+  <tr>
+	<td>Long</td><td>degrees.minutes</td>
+  </tr>
+  <tr>
+	<td>EOT</td><td>minutes.seconds</td>
+  </tr>
+</table>
+
+<p>Here is an example:</p>
+
+<pre class="calc" border=1>
+Y: 116.21 &ang;-6.18
+X: 7.53 &ang;20.52
+</pre>
+
+<p>Here, the parameters are 7h 53m right ascension, 20&deg; 52m declination, 116&deg; 21m ecliptic longitude, and the equation of time is -6m 18s</p>
+
+<p><tt>FLAG 10</tt> controls whether the calculations will be for noon (12h) or midnight (00h). For noon, flag 10 should be <i>clear</i> (<tt>CF 10</tt>). For midnight, flag 10 should be <i>set</i> (<tt>SF 10</tt>).</p>
+
+<p>Note that the Free42 version uses the built in <code>DDAYS</code> function. The 'current' date will be based on your local time rather than GMT.</p>
+
+<p>The Free42 version will not work with the original HP-42S as it requires the <code>TIME</code> functions. It will however work on a DM42. Make sure you are in <i>degrees</i> mode.</p>
+
+<p>I have also included the binary file <code>eot.raw</code> which can be imported to Free42. This saves having to manually enter the program.</p>
+
+<p>There is also an HP-15C version (<code>eot.15c</code>). This uses a simpler algorithm. Enter the day number (of year) and run <code>LBL A</code>. It is not as accurate as the C and Free42 versions.</p>
+
+<h3>Notes:</h3>
+
+<p>The program has been tested on:</p>
+
+<ul>
+  <li>Debian 12 (amd64)</li>
+  <li>Slackware 15 (amd64)</li>
+  <li>IRIX 5.3 (mips)</li>
+  <li>NetBSD 9.1</li>
+  </ul>
+<p>On IRIX 5.3, the program fails on dates before 1970-01-01 and after 2038-01-19.</p>
+
+<p>The equations used for the <code>sun_calc()</code> function were taken from the 2016 edition of <i>The Astronomical Almanac, page C5 ("Low precision formulas for the Sun").</i></p>
+
+<p><u>The claimed precision (for 1950 ~ 2050):</u></p>
+
+<ul>
+  <li><i>better than 3.5s</i> (for EOT)</li>
+  <li><i>better than 1.0'</i> (for R.A./Dec)</li>
+  <li><i>better than 0.0003 au</i> (for distance)</li>
+</ul>
+
+<p>Note that the program actually uses <b>UTC</b>, not GMT. The term 'GMT' is often used to mean UTC, but <i>true</i> GMT is actually UT1<sup>&ddagger;</sup> . UTC is currently kept within 0.9s of UT1 through the introduction of leap seconds (DUT1 is the difference). This is likely to change as leap seconds are to be abolished by 2035.</p>
+
+<p>Additionally, the modern prime meridian (based on WGS84) is actually 5.3" east of the Airy Transit Circle at Greenwich Royal Observatory.</p>
+
+<p>I consider these inaccuracies negligible. If you require high precision for astronomy, consider other programs such as <a href="https://xephem.github.io/XEphem/Site/xephem.html">XEphem</a><sup>&lowast;&lowast;</sup> or <a href="http://www.ap-i.net/skychart/">Cartes du Ciel</a>.</p>
+
+<p>If you discover any bugs in the program, please report them to me: <a href="mailto:ellie@esm.me.uk?subject=EOT%20program">ellie@esm.me.uk</a></p>
+<hr>
+
+<p><u>Footnotes:</u></p>
+
+<p><code>eot</code> is Copyright &copy;2024 Ellie McNeill and is licensed under version 3 of the GNU General Public License. See the included <code>LICENSE</code> file for the full terms and conditions.</p>
+
+<p>&lowast; UNIX&reg; is a registered trademark of The Open Group.</p>
+
+<p>&dagger; OK, it's actually 4 different types of time but I multiplied it by two for GMT/local. The JD could also be considered another type of time.
+
+<p>&ddagger; It is debatable what exactly 'true' GMT means. In the UK, it commonly refers to the UTC+0 timezone.</p>
+
+<p>&lowast;&lowast; Note that XEphem's user longitude values are <i>positive</i> for west, <i>negative</i> for east.</p>
+<hr>
+</td></table>
+</body>
+</html>
